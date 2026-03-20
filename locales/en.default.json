@@ -2,7 +2,10 @@
   "general": {
     "typography": "Typography",
     "fonts": "Fonts",
-    "primary": "Primary font",
+    "heading_font": "Heading font",
+    "heading_font_info": "Used for all headings (h1-h6)",
+    "body_font": "Body font",
+    "body_font_info": "Used for body text and paragraphs",
     "layout": "Layout",
     "colors": "Colors",
     "text": "Text",
