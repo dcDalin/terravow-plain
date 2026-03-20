@@ -1,4 +1,45 @@
 {
+  "general": {
+    "typography": "Typography",
+    "fonts": "Fonts",
+    "primary": "Primary font",
+    "layout": "Layout",
+    "colors": "Colors",
+    "text": "Text"
+  },
+  "labels": {
+    "page_width": "Maximum page width",
+    "page_margin": "Page margin",
+    "background": "Background color",
+    "foreground": "Text color",
+    "input_corner_radius": "Input corner radius",
+    "text": "Text",
+    "text_style": "Text style",
+    "alignment": "Alignment",
+    "layout_direction": "Layout direction",
+    "padding": "Padding"
+  },
+  "options": {
+    "page_width": {
+      "compact": "Compact (1024px)",
+      "narrow": "Narrow (1440px)",
+      "wide": "Wide (1760px)"
+    },
+    "text_style": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "normal": "Normal"
+    },
+    "alignment": {
+      "left": "Left",
+      "center": "Center",
+      "right": "Right"
+    },
+    "direction": {
+      "horizontal": "Horizontal",
+      "vertical": "Vertical"
+    }
+  },
   "404": {
     "title": "404",
     "not_found": "Page not found.",

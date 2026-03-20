@@ -31,6 +31,10 @@
         "label": "t:labels.page_width",
         "options": [
           {
+            "value": "64rem",
+            "label": "t:options.page_width.compact"
+          },
+          {
             "value": "90rem",
             "label": "t:options.page_width.narrow"
           },
@@ -39,7 +43,7 @@
             "label": "t:options.page_width.wide"
           }
         ],
-        "default": "90rem"
+        "default": "64rem"
       },
       {
         "type": "range",
