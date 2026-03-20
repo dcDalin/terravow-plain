@@ -1,0 +1,1 @@
+/Users/dc_dalin/Projects/smc/shopify/default-theme/AGENTS.md
