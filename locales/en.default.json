@@ -5,7 +5,12 @@
     "primary": "Primary font",
     "layout": "Layout",
     "colors": "Colors",
-    "text": "Text"
+    "text": "Text",
+    "header": "Header",
+    "navigation": {
+      "menu": "Open menu",
+      "close": "Close menu"
+    }
   },
   "labels": {
     "page_width": "Maximum page width",
@@ -17,7 +22,9 @@
     "text_style": "Text style",
     "alignment": "Alignment",
     "layout_direction": "Layout direction",
-    "padding": "Padding"
+    "padding": "Padding",
+    "menu": "Main menu",
+    "customer_account_menu": "Customer account menu"
   },
   "options": {
     "page_width": {

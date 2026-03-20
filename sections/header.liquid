@@ -1,39 +1,60 @@
-<header>
+<header class="header">
+  <button class="header__burger" aria-label="{{ 'general.navigation.menu' | t }}" aria-expanded="false">
+    <i data-lucide="menu" class="header__burger-icon header__burger-icon--menu"></i>
+    <i data-lucide="x" class="header__burger-icon header__burger-icon--close"></i>
+  </button>
+
   <h2 class="header__title">
     {{ shop.name | link_to: routes.root_url }}
   </h2>
 
-  <div class="header__menu">
+  <nav class="header__nav">
     {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
+      <a href="{{ link.url }}" class="header__link{% if link.active %} header__link--active{% endif %}">
+        {{ link.title }}
+      </a>
     {% endfor %}
-  </div>
+  </nav>
 
   <div class="header__icons">
     {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
+      <a href="{{ routes.account_url }}" class="header__icon">
+        <i data-lucide="user"></i>
+      </a>
     {% endif %}
 
-    <a href="{{ routes.cart_url }}">
+    <a href="{{ routes.cart_url }}" class="header__cart header__icon">
       {% if cart.item_count > 0 %}
         <sup>{{ cart.item_count }}</sup>
       {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
+      <i data-lucide="shopping-bag"></i>
     </a>
+  </div>
+
+  <div class="header__drawer">
+    <div class="header__drawer-overlay"></div>
+    <div class="header__drawer-content">
+      <nav class="header__drawer-nav">
+        {% for link in section.settings.menu.links %}
+          <a href="{{ link.url }}" class="header__drawer-link{% if link.active %} header__drawer-link--active{% endif %}">
+            {{ link.title }}
+          </a>
+        {% endfor %}
+      </nav>
+    </div>
   </div>
 </header>
 
 {% stylesheet %}
-  header {
+  .header {
     height: 5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
   }
-  header a {
+
+  .header a {
     position: relative;
     text-decoration: none;
     color: var(--color-foreground);
@@ -41,21 +62,281 @@
     align-items: center;
     justify-content: center;
   }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
+
+  .header__icon {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .header__icon i,
+  .header__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    stroke-width: 2;
+  }
+
+  .header__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .header__title a {
+    text-decoration: none;
+    color: var(--color-foreground);
+  }
+
+  /* Desktop Navigation */
+  .header__nav {
+    display: none;
+    gap: 2rem;
+  }
+
+  .header__link {
+    padding: 0.5rem 0;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  .header__link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-foreground);
+    transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .header__link:hover::after {
+    width: 100%;
+  }
+
+  .header__link--active::after {
+    width: 100%;
+  }
+
+  /* Icons */
+  .header__icons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .header__cart {
+    position: relative;
+  }
+
+  .header__cart sup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--color-foreground);
+    color: var(--color-background);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.25rem 0.375rem;
+    border-radius: 999px;
+    min-width: 1.25rem;
+    text-align: center;
+  }
+
+  /* Burger Menu */
+  .header__burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+    position: relative;
+  }
+
+  .header__burger-icon {
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .header__burger-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2;
+  }
+
+  .header__burger-icon--close {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+
+  .header__burger[aria-expanded="true"] .header__burger-icon--menu {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  .header__burger[aria-expanded="true"] .header__burger-icon--close {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  /* Mobile Drawer */
+  .header__drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    z-index: 1000;
+  }
+
+  .header__drawer.is-open {
+    visibility: visible;
+  }
+
+  .header__drawer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .header__drawer.is-open .header__drawer-overlay {
+    opacity: 1;
+  }
+
+  .header__drawer-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 400px;
+    height: 100%;
+    background: var(--color-background);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  .header__drawer.is-open .header__drawer-content {
+    transform: translateX(0);
+  }
+
+  .header__drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .header__drawer-link {
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .header__drawer-link--active {
+    font-weight: 700;
+    color: var(--color-foreground);
+  }
+
+  /* Desktop Styles */
+  @media (min-width: 768px) {
+    .header__burger {
+      display: none;
+    }
+
+    .header__nav {
+      display: flex;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .header__drawer {
+      display: none;
+    }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  class MobileNav {
+    constructor() {
+      this.burger = document.querySelector('.header__burger');
+      this.drawer = document.querySelector('.header__drawer');
+      this.overlay = document.querySelector('.header__drawer-overlay');
+      this.body = document.body;
+
+      if (this.burger && this.drawer) {
+        this.init();
+      }
+    }
+
+    init() {
+      this.burger.addEventListener('click', () => this.toggle());
+      this.overlay.addEventListener('click', () => this.close());
+
+      // Close on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.drawer.classList.contains('is-open')) {
+          this.close();
+        }
+      });
+    }
+
+    toggle() {
+      const isOpen = this.drawer.classList.toggle('is-open');
+      this.burger.setAttribute('aria-expanded', isOpen);
+
+      if (isOpen) {
+        this.body.style.overflow = 'hidden';
+      } else {
+        this.body.style.overflow = '';
+      }
+    }
+
+    close() {
+      this.drawer.classList.remove('is-open');
+      this.burger.setAttribute('aria-expanded', 'false');
+      this.body.style.overflow = '';
+    }
+  }
+
+  // Initialize Lucide icons
+  function initLucide() {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      new MobileNav();
+      initLucide();
+    });
+  } else {
+    new MobileNav();
+    initLucide();
+  }
+{% endjavascript %}
 
 {% schema %}
 {
@@ -64,7 +345,8 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
+      "label": "t:labels.menu",
+      "default": "main-menu"
     },
     {
       "type": "link_list",
