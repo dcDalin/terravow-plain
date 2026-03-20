@@ -320,22 +320,13 @@
     }
   }
 
-  // Initialize Lucide icons
-  function initLucide() {
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  }
-
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       new MobileNav();
-      initLucide();
     });
   } else {
     new MobileNav();
-    initLucide();
   }
 {% endjavascript %}
 
