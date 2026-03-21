@@ -3,12 +3,11 @@
   assign text_color = section.settings.text_color | default: '#ffffff'
   assign font_size = section.settings.font_size | default: 16
   assign speed = section.settings.speed | default: 30
-  assign direction = section.settings.direction | default: 'left'
   assign padding = section.settings.padding | default: 16
 -%}
 
 <div
-  class="marquee full-width {{ direction }}"
+  class="marquee full-width {{ section.settings.direction | default: 'left' }}"
   style="
     --marquee-bg: {{ bg_color }};
     --marquee-text: {{ text_color }};
