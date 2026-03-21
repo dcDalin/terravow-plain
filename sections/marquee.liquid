@@ -1,0 +1,183 @@
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#000000'
+  assign text_color = section.settings.text_color | default: '#ffffff'
+  assign font_size = section.settings.font_size | default: 16
+  assign speed = section.settings.speed | default: 30
+  assign direction = section.settings.direction | default: 'left'
+  assign padding = section.settings.padding | default: 16
+-%}
+
+<div
+  class="marquee {{ section.settings.direction }}"
+  style="
+    --marquee-bg: {{ bg_color }};
+    --marquee-text: {{ text_color }};
+    --marquee-font-size: {{ font_size }}px;
+    --marquee-speed: {{ speed }}s;
+    --marquee-padding: {{ padding }}px; 
+  "
+>
+  <div class="marquee__content">
+    <span class="marquee__text">
+      {%- if section.settings.text != blank -%}
+        {{ section.settings.text }}
+      {%- else -%}
+        Welcome to our store • Free shipping on orders over $50 • Shop now
+      {%- endif -%}
+    </span>
+    <span class="marquee__text" aria-hidden="true">
+      {%- if section.settings.text != blank -%}
+        {{ section.settings.text }}
+      {%- else -%}
+        Welcome to our store • Free shipping on orders over $50 • Shop now
+      {%- endif -%}
+    </span>
+  </div>
+</div>
+
+{% stylesheet %}
+  .marquee {
+    background-color: var(--marquee-bg);
+    color: var(--marquee-text);
+    padding: var(--marquee-padding) 0;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .marquee__content {
+    display: flex;
+    width: fit-content;
+    will-change: transform;
+  }
+
+  .marquee__text {
+    font-size: var(--marquee-font-size);
+    white-space: nowrap;
+    padding-right: 4rem;
+    display: inline-block;
+  }
+
+  .marquee.left .marquee__content {
+    animation: marquee-left var(--marquee-speed) linear infinite;
+  }
+
+  .marquee.right .marquee__content {
+    animation: marquee-right var(--marquee-speed) linear infinite;
+  }
+
+  @keyframes marquee-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes marquee-right {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__content {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.marquee",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "t:labels.marquee_text",
+      "default": "Welcome to our store • Free shipping on orders over $50 • Shop now"
+    },
+    {
+      "type": "header",
+      "content": "t:general.style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:labels.background_color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:labels.text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "t:labels.font_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "t:labels.padding",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "t:labels.animation"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:labels.direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.direction.left"
+        },
+        {
+          "value": "right",
+          "label": "t:options.direction.right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:labels.speed",
+      "info": "t:labels.speed_info",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.marquee",
+      "category": "t:general.content"
+    }
+  ]
+}
+{% endschema %}

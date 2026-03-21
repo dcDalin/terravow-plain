@@ -20,6 +20,7 @@
     "header": "Header",
     "layout": "Layout",
     "main": "Main",
+    "marquee": "Marquee",
     "page": "Page",
     "password": "Password",
     "primary": "Primary",
@@ -37,9 +38,11 @@
   },
   "labels": {
     "alignment": "Alignment",
+    "animation": "Animation",
     "announcement_text": "Announcement text",
     "background": "Background",
     "background_color": "Background color",
+    "direction": "Direction",
     "font_size": "Font size",
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",
@@ -47,12 +50,15 @@
     "input_corner_radius": "Input corner radius",
     "layout_direction": "Layout direction",
     "link_url": "Link URL",
+    "marquee_text": "Marquee text",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
     "padding": "Padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
+    "speed": "Speed",
+    "speed_info": "Lower values are faster",
     "text_color": "Text color",
     "text_style": "Text style",
     "text": "Text"
@@ -65,7 +71,9 @@
     },
     "direction": {
       "horizontal": "Horizontal",
-      "vertical": "Vertical"
+      "vertical": "Vertical",
+      "left": "Left",
+      "right": "Right"
     },
     "page_width": {
       "narrow": "Narrow",
