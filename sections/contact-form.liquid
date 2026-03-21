@@ -1,32 +1,287 @@
-<div class="contact-form full-width">
+{%- liquid
+  assign max_width = section.settings.max_width | default: 600
+  assign spacing_top = section.settings.spacing_top | default: 80
+  assign spacing_bottom = section.settings.spacing_bottom | default: 80
+  assign input_radius = section.settings.input_corner_radius | default: 8
+-%}
+
+<div
+  class="contact-form full-width"
+  style="
+    --contact-form-max-width: {{ max_width }}px;
+    --contact-form-spacing-top: {{ spacing_top }}px;
+    --contact-form-spacing-bottom: {{ spacing_bottom }}px;
+    --contact-form-input-radius: {{ input_radius }}px;
+  "
+  {{ section.shopify_attributes }}
+>
   <div class="contact-form__container">
-    <h1 class="contact-form__title">Contact Form</h1>
+    {% if section.settings.title != blank %}
+      <h2 class="contact-form__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% assign form_id = section.id | prepend: 'ContactForm-' %}
+    {%- form 'contact', id: form_id, class: 'contact-form__form' -%}
+      <input
+        name="contact[id]"
+        type="hidden"
+        value="{{ form_id }}"
+      >
+
+      {%- if form.errors and form.id == form_id -%}
+        <div class="contact-form__message contact-form__message--error">
+          {{ form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email }}
+        </div>
+      {%- endif -%}
+
+      {%- if form.posted_successfully? and form.id == form_id -%}
+        <div class="contact-form__message contact-form__message--success">
+          {{ 'general.contact_form.post_success' | t }}
+        </div>
+      {%- endif -%}
+
+      <div class="contact-form__row">
+        <div class="contact-form__field">
+          <label class="visually-hidden" for="ContactForm-name">
+            {{ 'general.contact_form.name' | t }}
+          </label>
+          <input
+            type="text"
+            id="ContactForm-name"
+            class="contact-form__input"
+            autocomplete="name"
+            name="contact[name]"
+            value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+            placeholder="{{ 'general.contact_form.name' | t }}"
+          >
+        </div>
+
+        <div class="contact-form__field">
+          <label class="visually-hidden" for="ContactForm-email">
+            {{ 'general.contact_form.email' | t }}
+            <span aria-hidden="true">*</span>
+          </label>
+          <input
+            type="email"
+            id="ContactForm-email"
+            class="contact-form__input"
+            autocomplete="email"
+            name="contact[email]"
+            spellcheck="false"
+            autocapitalize="off"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            aria-required="true"
+            {% if form.errors contains 'email' and form.id == form_id %}
+              aria-invalid="true"
+            {% endif %}
+            placeholder="{{ 'general.contact_form.email' | t }}"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="contact-form__field">
+        <label class="visually-hidden" for="ContactForm-phone">
+          {{ 'general.contact_form.phone' | t }}
+        </label>
+        <input
+          type="tel"
+          id="ContactForm-phone"
+          class="contact-form__input"
+          autocomplete="tel"
+          name="contact[phone]"
+          pattern="[0-9\-]*"
+          value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+          placeholder="{{ 'general.contact_form.phone' | t }}"
+        >
+      </div>
+
+      <div class="contact-form__field">
+        <label class="visually-hidden" for="ContactForm-body">
+          {{ 'general.contact_form.comment' | t }}
+        </label>
+        <textarea
+          rows="10"
+          id="ContactForm-body"
+          class="contact-form__input contact-form__input--textarea"
+          name="contact[body]"
+          placeholder="{{ 'general.contact_form.comment' | t }}"
+        >{{ form.body }}</textarea>
+      </div>
+
+      <button type="submit" class="contact-form__submit">
+        {{ 'general.contact_form.send' | t }}
+      </button>
+    {%- endform -%}
   </div>
 </div>
 
 {% stylesheet %}
   .contact-form {
     width: 100%;
-    padding: 4rem 1rem;
+    padding: var(--contact-form-spacing-top) 1rem var(--contact-form-spacing-bottom);
   }
 
   .contact-form__container {
-    max-width: 800px;
+    max-width: var(--contact-form-max-width);
     margin: 0 auto;
   }
 
   .contact-form__title {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin: 0;
+    margin: 0 0 2rem 0;
+  }
+
+  .contact-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-form__row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media (min-width: 750px) {
+    .contact-form__row {
+      flex-direction: row;
+    }
+  }
+
+  .contact-form__field {
+    flex: 1;
+  }
+
+  .contact-form__input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 1px solid #e5e7eb;
+    border-radius: var(--contact-form-input-radius);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: #ffffff;
+    color: #1f2937;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-form__input:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+
+  .contact-form__input--textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  .contact-form__submit {
+    padding: 1rem 2rem;
+    background-color: #1f2937;
+    color: #ffffff;
+    border: none;
+    border-radius: var(--contact-form-input-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .contact-form__submit:hover {
+    background-color: #111827;
+  }
+
+  .contact-form__message {
+    padding: 1rem 1.25rem;
+    border-radius: var(--contact-form-input-radius);
+    font-size: 0.875rem;
+  }
+
+  .contact-form__message--error {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+
+  .contact-form__message--success {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:general.contact_form",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:labels.title",
+      "default": "Contact us"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "input_corner_radius",
+      "label": "t:labels.input_corner_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "t:labels.spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "label": "t:labels.spacing_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "label": "t:labels.spacing_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
   "presets": [
     {
       "name": "t:general.contact_form",
