@@ -31,7 +31,16 @@
   endunless
 
   assign cards_margin = 32
-  if spacing_bottom == 0
+  case size
+    when 'small'
+      assign cards_margin = 24
+    when 'medium'
+      assign cards_margin = 32
+    when 'large'
+      assign cards_margin = 40
+  endcase
+
+  if spacing_bottom < 20
     assign cards_margin = 0
   endif
 -%}
