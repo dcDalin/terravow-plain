@@ -23,34 +23,58 @@
   <div class="marquee-section__wrapper">
     <div class="marquee-section__content">
       <div class="marquee-section__items">
-        {%- if section.settings.text != blank -%}
-          <span class="marquee-section__text">{{ section.settings.text }}</span>
-          {%- if section.settings.divider != blank -%}
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'text' -%}
+              {%- if block.settings.text != blank -%}
+                <span class="marquee-section__text" {{ block.shopify_attributes }}>
+                  {{ block.settings.text }}
+                </span>
+              {%- endif -%}
+            {%- when 'image' -%}
+              {%- if block.settings.image != blank -%}
+                <span class="marquee-section__image" {{ block.shopify_attributes }}>
+                  {{ block.settings.image | image_url: width: block.settings.image_width | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
+                </span>
+              {%- endif -%}
+            {%- when 'icon' -%}
+              {%- if block.settings.icon != blank -%}
+                <span class="marquee-section__icon" {{ block.shopify_attributes }}>
+                  {{ block.settings.icon }}
+                </span>
+              {%- endif -%}
+          {%- endcase -%}
+          {%- if section.settings.divider != blank and forloop.last == false -%}
             <span class="marquee-section__divider">{{ section.settings.divider }}</span>
           {%- endif -%}
-        {%- else -%}
-          <span class="marquee-section__text">Welcome to our store</span>
-          <span class="marquee-section__divider">•</span>
-          <span class="marquee-section__text">Free shipping on orders over $50</span>
-          <span class="marquee-section__divider">•</span>
-          <span class="marquee-section__text">Shop now</span>
-          <span class="marquee-section__divider">•</span>
-        {%- endif -%}
+        {%- endfor -%}
       </div>
       <div class="marquee-section__items" aria-hidden="true">
-        {%- if section.settings.text != blank -%}
-          <span class="marquee-section__text">{{ section.settings.text }}</span>
-          {%- if section.settings.divider != blank -%}
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'text' -%}
+              {%- if block.settings.text != blank -%}
+                <span class="marquee-section__text">
+                  {{ block.settings.text }}
+                </span>
+              {%- endif -%}
+            {%- when 'image' -%}
+              {%- if block.settings.image != blank -%}
+                <span class="marquee-section__image">
+                  {{ block.settings.image | image_url: width: block.settings.image_width | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
+                </span>
+              {%- endif -%}
+            {%- when 'icon' -%}
+              {%- if block.settings.icon != blank -%}
+                <span class="marquee-section__icon">
+                  {{ block.settings.icon }}
+                </span>
+              {%- endif -%}
+          {%- endcase -%}
+          {%- if section.settings.divider != blank and forloop.last == false -%}
             <span class="marquee-section__divider">{{ section.settings.divider }}</span>
           {%- endif -%}
-        {%- else -%}
-          <span class="marquee-section__text">Welcome to our store</span>
-          <span class="marquee-section__divider">•</span>
-          <span class="marquee-section__text">Free shipping on orders over $50</span>
-          <span class="marquee-section__divider">•</span>
-          <span class="marquee-section__text">Shop now</span>
-          <span class="marquee-section__divider">•</span>
-        {%- endif -%}
+        {%- endfor -%}
       </div>
     </div>
   </div>
@@ -90,6 +114,23 @@
     white-space: nowrap;
   }
 
+  .marquee-section__image {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .marquee-section__image img {
+    display: block;
+    height: auto;
+    max-height: var(--marquee-font-size);
+  }
+
+  .marquee-section__icon {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--marquee-font-size);
+  }
+
   .marquee-section__divider {
     display: inline-flex;
     align-items: center;
@@ -118,24 +159,55 @@
 {% schema %}
 {
   "name": "t:general.marquee",
-  "settings": [
-    {
-      "type": "header",
-      "content": "t:general.content"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "text",
-      "label": "t:labels.marquee_text",
-      "default": "Welcome to our store • Free shipping on orders over $50 • Shop now"
-    },
+  "blocks": [
     {
       "type": "text",
-      "id": "divider",
-      "label": "Divider",
-      "info": "Optional divider between repeated text",
-      "default": "•"
+      "name": "Text",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Marquee item"
+        }
+      ]
     },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "label": "Image width",
+          "min": 20,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "default": 100
+        }
+      ]
+    },
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "info": "Enter emoji or icon character",
+          "default": "★"
+        }
+      ]
+    }
+  ],
+  "settings": [
     {
       "type": "header",
       "content": "t:general.style"
@@ -183,6 +255,13 @@
       "default": 32
     },
     {
+      "type": "text",
+      "id": "divider",
+      "label": "Divider",
+      "info": "Optional divider between items",
+      "default": "•"
+    },
+    {
       "type": "header",
       "content": "t:labels.animation"
     },
@@ -217,7 +296,39 @@
   "presets": [
     {
       "name": "t:general.marquee",
-      "category": "t:general.content"
+      "category": "t:general.content",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "text": "Welcome to our store"
+          }
+        },
+        {
+          "type": "icon",
+          "settings": {
+            "icon": "★"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "Free shipping on orders over $50"
+          }
+        },
+        {
+          "type": "icon",
+          "settings": {
+            "icon": "★"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "Shop now"
+          }
+        }
+      ]
     }
   ]
 }
