@@ -12,10 +12,18 @@
   assign hover_text = block.settings.hover_text_color | default: '#ffffff'
   assign active_bg = block.settings.active_background_color | default: '#000000'
   assign active_text = block.settings.active_text_color | default: '#ffffff'
+  assign size = block.settings.size | default: 'medium'
+  assign spacing_top = block.settings.spacing_top | default: 48
+  assign spacing_bottom = block.settings.spacing_bottom | default: 48
+  assign spacing_sides = block.settings.spacing_sides | default: 16
+
+  if block.settings.title == blank
+    assign spacing_top = spacing_top | minus: 32
+  endif
 -%}
 
 <div
-  class="information-marquee"
+  class="information-marquee information-marquee--{{ size }}"
   data-marquee-speed="{{ block.settings.marquee_speed }}"
   style="
     --info-marquee-bg: {{ bg_color }};
@@ -24,6 +32,9 @@
     --info-marquee-hover-text: {{ hover_text }};
     --info-marquee-active-bg: {{ active_bg }};
     --info-marquee-active-text: {{ active_text }};
+    --info-marquee-spacing-top: {{ spacing_top }}px;
+    --info-marquee-spacing-bottom: {{ spacing_bottom }}px;
+    --info-marquee-spacing-sides: {{ spacing_sides }}px;
   "
   {{ block.shopify_attributes }}
 >
@@ -98,6 +109,7 @@
   .information-marquee {
     width: 100%;
     overflow: hidden;
+    padding: var(--info-marquee-spacing-top) var(--info-marquee-spacing-sides) var(--info-marquee-spacing-bottom);
   }
 
   .information-marquee__title {
@@ -149,7 +161,6 @@
   }
 
   .information-marquee__item {
-    padding: 0.75rem 1.5rem;
     background-color: var(--info-marquee-bg);
     border: 1px solid #e5e7eb;
     border-radius: 100px;
@@ -157,9 +168,26 @@
     white-space: nowrap;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: inherit;
-    font-size: 0.875rem;
     font-weight: 700;
     color: var(--info-marquee-text);
+  }
+
+  /* Medium size (default) */
+  .information-marquee--medium .information-marquee__item {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  /* Small size */
+  .information-marquee--small .information-marquee__item {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  /* Large size */
+  .information-marquee--large .information-marquee__item {
+    padding: 1rem 2rem;
+    font-size: 1rem;
   }
 
   .information-marquee__item:hover {
@@ -332,6 +360,61 @@
       "step": 5,
       "unit": "s",
       "default": 20
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:labels.size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.size.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.size.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.size.large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "label": "t:labels.spacing_top",
+      "info": "t:labels.spacing_top_info",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "label": "t:labels.spacing_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "spacing_sides",
+      "label": "t:labels.spacing_sides",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 16
     },
     {
       "type": "header",
