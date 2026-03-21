@@ -16,6 +16,7 @@
   assign spacing_top = block.settings.spacing_top | default: 48
   assign spacing_bottom = block.settings.spacing_bottom | default: 48
   assign spacing_sides = block.settings.spacing_sides | default: 16
+  assign item_spacing = block.settings.item_spacing | default: 16
 
   assign has_title = false
   if block.settings.title != blank
@@ -28,6 +29,11 @@
       assign spacing_top = 0
     endif
   endunless
+
+  assign cards_margin = 32
+  if spacing_bottom == 0
+    assign cards_margin = 0
+  endif
 -%}
 
 <div
@@ -42,6 +48,8 @@
     --info-marquee-spacing-top: {{ spacing_top }}px;
     --info-marquee-spacing-bottom: {{ spacing_bottom }}px;
     --info-marquee-spacing-sides: {{ spacing_sides }}px;
+    --info-marquee-item-spacing: {{ item_spacing }}px;
+    --info-marquee-cards-margin: {{ cards_margin }}px;
     --marquee-speed: {{ block.settings.marquee_speed }}s;
   "
   {{ block.shopify_attributes }}
@@ -163,6 +171,7 @@
   .information-marquee__track {
     display: flex;
     width: fit-content;
+    gap: var(--info-marquee-item-spacing);
     animation: marquee-scroll var(--marquee-speed, 20s) linear infinite;
   }
 
@@ -177,30 +186,7 @@
   .information-marquee__content {
     display: flex;
     flex-shrink: 0;
-  }
-
-  .information-marquee--small .information-marquee__track {
-    gap: 0.75rem;
-  }
-
-  .information-marquee--small .information-marquee__content {
-    gap: 0.75rem;
-  }
-
-  .information-marquee--medium .information-marquee__track {
-    gap: 1rem;
-  }
-
-  .information-marquee--medium .information-marquee__content {
-    gap: 1rem;
-  }
-
-  .information-marquee--large .information-marquee__track {
-    gap: 1.25rem;
-  }
-
-  .information-marquee--large .information-marquee__content {
-    gap: 1.25rem;
+    gap: var(--info-marquee-item-spacing);
   }
 
   .information-marquee__item {
@@ -243,7 +229,7 @@
   }
 
   .information-marquee__cards {
-    margin-top: 2rem;
+    margin-top: var(--info-marquee-cards-margin);
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -483,6 +469,16 @@
       "min": 0,
       "max": 80,
       "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "Item spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
       "unit": "px",
       "default": 16
     },
