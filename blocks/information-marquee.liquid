@@ -136,9 +136,9 @@
 {% stylesheet %}
   .information-marquee {
     width: 100%;
-    overflow: visible;
     padding: var(--info-marquee-spacing-top) var(--info-marquee-spacing-sides) var(--info-marquee-spacing-bottom);
     position: relative;
+    overflow: visible;
   }
 
   .information-marquee__title {
@@ -183,7 +183,6 @@
       black 90%,
       transparent
     );
-    z-index: 1;
   }
 
   .information-marquee__track {
@@ -280,8 +279,9 @@
     right: 0;
     top: 100%;
     margin-top: var(--info-marquee-cards-gap);
-    z-index: 50;
+    z-index: 999;
     pointer-events: none;
+    visibility: visible;
   }
 
   .information-marquee__cards {
@@ -298,10 +298,13 @@
     border-radius: 12px;
     animation: slide-down 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    display: block;
+    position: relative;
+    z-index: 1000;
   }
 
   .information-marquee__card[hidden] {
-    display: none;
+    display: none !important;
   }
 
   /* Medium size (default) */
