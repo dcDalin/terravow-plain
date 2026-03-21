@@ -16,7 +16,7 @@
           "type": "information-marquee",
           "name": "t:general.information_marquee",
           "settings": {
-            "title": "4",
+            "title": "",
             "marquee_speed": 10,
             "size": "small",
             "spacing_top": 0,
