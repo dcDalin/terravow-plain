@@ -1,23 +1,39 @@
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#000000'
+  assign text_color = section.settings.text_color | default: '#ffffff'
+  assign font_size = section.settings.font_size | default: 14
+  assign padding = section.settings.padding | default: 12
+  assign alignment = section.settings.text_alignment | default: 'announcement-bar--center'
+-%}
+
 <div
-  class="announcement-bar {{ section.settings.text_alignment }}"
+  class="announcement-bar {{ alignment }}"
   style="
-    --announcement-bg: {{ section.settings.background_color }};
-    --announcement-text: {{ section.settings.text_color }};
-    --announcement-font-size: {{ section.settings.font_size }}px;
-    --announcement-padding: {{ section.settings.padding }}px;
+    --announcement-bg: {{ bg_color }};
+    --announcement-text: {{ text_color }};
+    --announcement-font-size: {{ font_size }}px;
+    --announcement-padding: {{ padding }}px;
   "
 >
-  {% if section.settings.link_url != blank %}
+  {%- if section.settings.link_url != blank -%}
     <a href="{{ section.settings.link_url }}" class="announcement-bar__link">
       <div class="announcement-bar__content">
-        {{ section.settings.text }}
+        {%- if section.settings.text != blank -%}
+          {{ section.settings.text }}
+        {%- else -%}
+          Welcome to our store!
+        {%- endif -%}
       </div>
     </a>
-  {% else %}
+  {%- else -%}
     <div class="announcement-bar__content">
-      {{ section.settings.text }}
+      {%- if section.settings.text != blank -%}
+        {{ section.settings.text }}
+      {%- else -%}
+        Welcome to our store!
+      {%- endif -%}
     </div>
-  {% endif %}
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
@@ -73,10 +89,10 @@
       "content": "t:general.content"
     },
     {
-      "type": "richtext",
+      "type": "inline_richtext",
       "id": "text",
       "label": "t:labels.announcement_text",
-      "default": "<p>Welcome to our store!</p>"
+      "default": "Welcome to our store! Free shipping on orders over $50"
     },
     {
       "type": "url",
