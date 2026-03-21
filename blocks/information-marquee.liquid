@@ -342,8 +342,8 @@
     }
 
     handleItemClick(item) {
-      const itemIndex = item.dataset.itemIndex;
-      const targetCard = this.marquee.querySelector('[data-card-index="' + itemIndex + '"]');
+      const itemId = item.dataset.itemId;
+      const targetCard = this.marquee.querySelector('[data-card-id="' + itemId + '"]');
 
       if (!targetCard) return;
 
@@ -389,6 +389,33 @@
 {% schema %}
 {
   "name": "t:general.information_marquee",
+  "blocks": [
+    {
+      "type": "info_item",
+      "name": "Information item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:labels.title",
+          "default": "Item Title"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "t:labels.subtitle",
+          "default": "Item Subtitle"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "t:labels.body",
+          "default": "<p>Item description goes here.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
   "settings": [
     {
       "type": "text",
@@ -511,121 +538,53 @@
       "id": "active_text_color",
       "label": "t:labels.active_text_color",
       "default": "#ffffff"
-    },
-    {
-      "type": "header",
-      "content": "t:labels.item_1"
-    },
-    {
-      "type": "text",
-      "id": "item_1_title",
-      "label": "t:labels.title",
-      "default": "Free Shipping"
-    },
-    {
-      "type": "text",
-      "id": "item_1_subtitle",
-      "label": "t:labels.subtitle",
-      "default": "Fast & Free Delivery"
-    },
-    {
-      "type": "richtext",
-      "id": "item_1_body",
-      "label": "t:labels.body",
-      "default": "<p>Enjoy free shipping on all orders over $50. We deliver worldwide with tracking.</p>"
-    },
-    {
-      "type": "header",
-      "content": "t:labels.item_2"
-    },
-    {
-      "type": "text",
-      "id": "item_2_title",
-      "label": "t:labels.title",
-      "default": "30-Day Returns"
-    },
-    {
-      "type": "text",
-      "id": "item_2_subtitle",
-      "label": "t:labels.subtitle",
-      "default": "Hassle-Free Returns"
-    },
-    {
-      "type": "richtext",
-      "id": "item_2_body",
-      "label": "t:labels.body",
-      "default": "<p>Not satisfied? Return your purchase within 30 days for a full refund.</p>"
-    },
-    {
-      "type": "header",
-      "content": "t:labels.item_3"
-    },
-    {
-      "type": "text",
-      "id": "item_3_title",
-      "label": "t:labels.title",
-      "default": "Premium Quality"
-    },
-    {
-      "type": "text",
-      "id": "item_3_subtitle",
-      "label": "t:labels.subtitle",
-      "default": "High-Quality Materials"
-    },
-    {
-      "type": "richtext",
-      "id": "item_3_body",
-      "label": "t:labels.body",
-      "default": "<p>Crafted from the finest materials with attention to every detail.</p>"
-    },
-    {
-      "type": "header",
-      "content": "t:labels.item_4"
-    },
-    {
-      "type": "text",
-      "id": "item_4_title",
-      "label": "t:labels.title",
-      "default": "Secure Payment"
-    },
-    {
-      "type": "text",
-      "id": "item_4_subtitle",
-      "label": "t:labels.subtitle",
-      "default": "Safe & Secure Checkout"
-    },
-    {
-      "type": "richtext",
-      "id": "item_4_body",
-      "label": "t:labels.body",
-      "default": "<p>Your payment information is encrypted and secure with our trusted payment partners.</p>"
-    },
-    {
-      "type": "header",
-      "content": "t:labels.item_5"
-    },
-    {
-      "type": "text",
-      "id": "item_5_title",
-      "label": "t:labels.title",
-      "default": "Customer Support"
-    },
-    {
-      "type": "text",
-      "id": "item_5_subtitle",
-      "label": "t:labels.subtitle",
-      "default": "24/7 Support Available"
-    },
-    {
-      "type": "richtext",
-      "id": "item_5_body",
-      "label": "t:labels.body",
-      "default": "<p>Our dedicated support team is always here to help you with any questions.</p>"
     }
   ],
   "presets": [
     {
-      "name": "t:general.information_marquee"
+      "name": "t:general.information_marquee",
+      "blocks": [
+        {
+          "type": "info_item",
+          "settings": {
+            "title": "Free Shipping",
+            "subtitle": "Fast & Free Delivery",
+            "body": "<p>Enjoy free shipping on all orders over $50. We deliver worldwide with tracking.</p>"
+          }
+        },
+        {
+          "type": "info_item",
+          "settings": {
+            "title": "30-Day Returns",
+            "subtitle": "Hassle-Free Returns",
+            "body": "<p>Not satisfied? Return your purchase within 30 days for a full refund.</p>"
+          }
+        },
+        {
+          "type": "info_item",
+          "settings": {
+            "title": "Premium Quality",
+            "subtitle": "High-Quality Materials",
+            "body": "<p>Crafted from the finest materials with attention to every detail.</p>"
+          }
+        },
+        {
+          "type": "info_item",
+          "settings": {
+            "title": "Secure Payment",
+            "subtitle": "Safe & Secure Checkout",
+            "body": "<p>Your payment information is encrypted and secure with our trusted payment partners.</p>"
+          }
+        },
+        {
+          "type": "info_item",
+          "settings": {
+            "title": "Customer Support",
+            "subtitle": "24/7 Support Available",
+            "body": "<p>Our dedicated support team is always here to help you with any questions.</p>"
+          }
+        }
+      ]
     }
   ]
 }
