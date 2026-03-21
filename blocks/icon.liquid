@@ -1,0 +1,25 @@
+{% doc %}
+  Renders an icon element.
+
+  @example
+  {% content_for 'block', type: 'icon', id: 'icon-1' %}
+{% enddoc %}
+
+{%- if block.settings.icon != blank -%}
+  <span class="icon-block">{{ block.settings.icon }}</span>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Icon",
+  "settings": [
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Icon",
+      "info": "Enter emoji or icon character",
+      "default": "★"
+    }
+  ]
+}
+{% endschema %}

@@ -24,26 +24,9 @@
     <div class="marquee-section__content">
       <div class="marquee-section__items">
         {%- for block in section.blocks -%}
-          {%- case block.type -%}
-            {%- when 'text' -%}
-              {%- if block.settings.text != blank -%}
-                <span class="marquee-section__text" {{ block.shopify_attributes }}>
-                  {{ block.settings.text }}
-                </span>
-              {%- endif -%}
-            {%- when 'image' -%}
-              {%- if block.settings.image != blank -%}
-                <span class="marquee-section__image" {{ block.shopify_attributes }}>
-                  {{ block.settings.image | image_url: width: block.settings.image_width | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
-                </span>
-              {%- endif -%}
-            {%- when 'icon' -%}
-              {%- if block.settings.icon != blank -%}
-                <span class="marquee-section__icon" {{ block.shopify_attributes }}>
-                  {{ block.settings.icon }}
-                </span>
-              {%- endif -%}
-          {%- endcase -%}
+          <span {{ block.shopify_attributes }}>
+            {%- render block -%}
+          </span>
           {%- if section.settings.divider != blank and forloop.last == false -%}
             <span class="marquee-section__divider">{{ section.settings.divider }}</span>
           {%- endif -%}
@@ -51,26 +34,9 @@
       </div>
       <div class="marquee-section__items" aria-hidden="true">
         {%- for block in section.blocks -%}
-          {%- case block.type -%}
-            {%- when 'text' -%}
-              {%- if block.settings.text != blank -%}
-                <span class="marquee-section__text">
-                  {{ block.settings.text }}
-                </span>
-              {%- endif -%}
-            {%- when 'image' -%}
-              {%- if block.settings.image != blank -%}
-                <span class="marquee-section__image">
-                  {{ block.settings.image | image_url: width: block.settings.image_width | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
-                </span>
-              {%- endif -%}
-            {%- when 'icon' -%}
-              {%- if block.settings.icon != blank -%}
-                <span class="marquee-section__icon">
-                  {{ block.settings.icon }}
-                </span>
-              {%- endif -%}
-          {%- endcase -%}
+          <span>
+            {%- render block -%}
+          </span>
           {%- if section.settings.divider != blank and forloop.last == false -%}
             <span class="marquee-section__divider">{{ section.settings.divider }}</span>
           {%- endif -%}
@@ -110,25 +76,28 @@
     font-size: var(--marquee-font-size);
   }
 
-  .marquee-section__text {
+  .marquee-section__items > span {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .text-block {
     white-space: nowrap;
   }
 
-  .marquee-section__image {
+  .image-block {
     display: inline-flex;
     align-items: center;
   }
 
-  .marquee-section__image img {
+  .image-block img {
     display: block;
     height: auto;
-    max-height: var(--marquee-font-size);
   }
 
-  .marquee-section__icon {
+  .icon-block {
     display: inline-flex;
     align-items: center;
-    font-size: var(--marquee-font-size);
   }
 
   .marquee-section__divider {
@@ -161,50 +130,13 @@
   "name": "t:general.marquee",
   "blocks": [
     {
-      "type": "text",
-      "name": "Text",
-      "settings": [
-        {
-          "type": "textarea",
-          "id": "text",
-          "label": "Text",
-          "default": "Marquee item"
-        }
-      ]
+      "type": "text"
     },
     {
-      "type": "image",
-      "name": "Image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "range",
-          "id": "image_width",
-          "label": "Image width",
-          "min": 20,
-          "max": 200,
-          "step": 10,
-          "unit": "px",
-          "default": 100
-        }
-      ]
+      "type": "image"
     },
     {
-      "type": "icon",
-      "name": "Icon",
-      "settings": [
-        {
-          "type": "text",
-          "id": "icon",
-          "label": "Icon",
-          "info": "Enter emoji or icon character",
-          "default": "★"
-        }
-      ]
+      "type": "icon"
     }
   ],
   "settings": [
@@ -299,34 +231,13 @@
       "category": "t:general.content",
       "blocks": [
         {
-          "type": "text",
-          "settings": {
-            "text": "Welcome to our store"
-          }
+          "type": "text"
         },
         {
-          "type": "icon",
-          "settings": {
-            "icon": "★"
-          }
+          "type": "icon"
         },
         {
-          "type": "text",
-          "settings": {
-            "text": "Free shipping on orders over $50"
-          }
-        },
-        {
-          "type": "icon",
-          "settings": {
-            "icon": "★"
-          }
-        },
-        {
-          "type": "text",
-          "settings": {
-            "text": "Shop now"
-          }
+          "type": "text"
         }
       ]
     }

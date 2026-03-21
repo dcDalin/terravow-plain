@@ -1,0 +1,35 @@
+{% doc %}
+  Renders an image element.
+
+  @example
+  {% content_for 'block', type: 'image', id: 'image-1' %}
+{% enddoc %}
+
+{%- if block.settings.image != blank -%}
+  <span class="image-block">
+    {{ block.settings.image | image_url: width: block.settings.image_width | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
+  </span>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image width",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    }
+  ]
+}
+{% endschema %}
