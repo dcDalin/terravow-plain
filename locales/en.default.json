@@ -13,6 +13,17 @@
     "navigation": {
       "menu": "Open menu",
       "close": "Close menu"
+    },
+    "accessibility": {
+      "close": "Close"
+    },
+    "cart": {
+      "title": "Cart",
+      "empty": "Your cart is empty",
+      "subtotal": "Subtotal",
+      "view_cart": "View cart",
+      "checkout": "Checkout",
+      "remove": "Remove"
     }
   },
   "labels": {
