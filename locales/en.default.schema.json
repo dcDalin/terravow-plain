@@ -38,6 +38,8 @@
     "typography": "Typography"
   },
   "labels": {
+    "active_background_color": "Active background color",
+    "active_text_color": "Active text color",
     "alignment": "Alignment",
     "animation": "Animation",
     "announcement_text": "Announcement text",
@@ -49,6 +51,8 @@
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
+    "hover_background_color": "Hover background color",
+    "hover_text_color": "Hover text color",
     "input_corner_radius": "Input corner radius",
     "item_1": "Item 1",
     "item_2": "Item 2",

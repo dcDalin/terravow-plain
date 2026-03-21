@@ -5,9 +5,26 @@
   {% content_for 'block', type: 'information-marquee', id: 'info-marquee' %}
 {% enddoc %}
 
+{%- liquid
+  assign bg_color = block.settings.background_color | default: '#ffffff'
+  assign text_color = block.settings.text_color | default: '#1f2937'
+  assign hover_bg = block.settings.hover_background_color | default: '#1f2937'
+  assign hover_text = block.settings.hover_text_color | default: '#ffffff'
+  assign active_bg = block.settings.active_background_color | default: '#000000'
+  assign active_text = block.settings.active_text_color | default: '#ffffff'
+-%}
+
 <div
   class="information-marquee"
   data-marquee-speed="{{ block.settings.marquee_speed }}"
+  style="
+    --info-marquee-bg: {{ bg_color }};
+    --info-marquee-text: {{ text_color }};
+    --info-marquee-hover-bg: {{ hover_bg }};
+    --info-marquee-hover-text: {{ hover_text }};
+    --info-marquee-active-bg: {{ active_bg }};
+    --info-marquee-active-text: {{ active_text }};
+  "
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.title != blank -%}
@@ -133,29 +150,28 @@
 
   .information-marquee__item {
     padding: 0.75rem 1.5rem;
-    background-color: #fff;
+    background-color: var(--info-marquee-bg);
     border: 1px solid #e5e7eb;
     border-radius: 100px;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: inherit;
     font-size: 0.875rem;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--info-marquee-text);
   }
 
   .information-marquee__item:hover {
-    background-color: #1f2937;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background-color: var(--info-marquee-hover-bg);
+    color: var(--info-marquee-hover-text);
+    border-color: var(--info-marquee-hover-bg);
   }
 
   .information-marquee__item[aria-expanded='true'] {
-    background-color: #000;
-    color: #fff;
-    border-color: #000;
+    background-color: var(--info-marquee-active-bg);
+    color: var(--info-marquee-active-text);
+    border-color: var(--info-marquee-active-bg);
   }
 
   .information-marquee__cards {
@@ -316,6 +332,46 @@
       "step": 5,
       "unit": "s",
       "default": 20
+    },
+    {
+      "type": "header",
+      "content": "t:general.colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:labels.background_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:labels.text_color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "color",
+      "id": "hover_background_color",
+      "label": "t:labels.hover_background_color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "color",
+      "id": "hover_text_color",
+      "label": "t:labels.hover_text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "active_background_color",
+      "label": "t:labels.active_background_color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "active_text_color",
+      "label": "t:labels.active_text_color",
+      "default": "#ffffff"
     },
     {
       "type": "header",
