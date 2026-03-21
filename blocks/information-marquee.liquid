@@ -398,39 +398,30 @@
       const cards = element.querySelectorAll('.information-marquee__card');
       let currentActiveItem = null;
 
-      console.log('Initializing marquee with', items.length, 'items and', cards.length, 'cards');
-
       items.forEach(item => {
         item.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
 
           const itemIndex = this.dataset.itemIndex;
-          const targetCard = element.querySelector(`[data-card-index="${itemIndex}"]`);
-
-          console.log('Clicked item', itemIndex, 'Card element:', targetCard);
+          const targetCard = element.querySelector('[data-card-index="' + itemIndex + '"]');
 
           if (!targetCard) {
-            console.error('No card found for index', itemIndex);
             return;
           }
 
-          // Pause marquee
           if (track) {
             track.setAttribute('data-paused', 'true');
           }
 
-          // If clicking same item, close it
           if (currentActiveItem === this) {
             items.forEach(i => i.setAttribute('aria-expanded', 'false'));
             cards.forEach(c => c.hidden = true);
             if (track) track.setAttribute('data-paused', 'false');
             currentActiveItem = null;
-            console.log('Closed card');
             return;
           }
 
-          // Close all and open clicked one
           items.forEach(i => i.setAttribute('aria-expanded', 'false'));
           cards.forEach(c => c.hidden = true);
 
@@ -438,12 +429,9 @@
           targetCard.hidden = false;
           targetCard.removeAttribute('hidden');
           currentActiveItem = this;
-
-          console.log('Opened card', itemIndex, 'Hidden attr:', targetCard.hasAttribute('hidden'));
         });
       });
 
-      // Close on outside click
       document.addEventListener('click', function(e) {
         if (!element.contains(e.target)) {
           items.forEach(i => i.setAttribute('aria-expanded', 'false'));
@@ -458,14 +446,12 @@
       document.querySelectorAll('.information-marquee').forEach(initInformationMarquee);
     }
 
-    // Run on DOM ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
 
-    // Also run on Shopify section load (theme editor)
     if (typeof Shopify !== 'undefined' && Shopify.designMode) {
       document.addEventListener('shopify:section:load', init);
     }
