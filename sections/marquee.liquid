@@ -8,7 +8,7 @@
 -%}
 
 <div
-  class="marquee {{ direction }}"
+  class="marquee full-width {{ direction }}"
   style="
     --marquee-bg: {{ bg_color }};
     --marquee-text: {{ text_color }};
@@ -40,10 +40,6 @@
     background-color: var(--marquee-bg);
     color: var(--marquee-text);
     padding: var(--marquee-padding) 0;
-    width: 100vw;
-    max-width: 100%;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
     overflow: hidden;
     position: relative;
   }
