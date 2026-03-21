@@ -1,6 +1,7 @@
 {
   "general": {
     "404": "Not found",
+    "announcement_bar": "Announcement bar",
     "article": "Article",
     "block": "Block",
     "blog": "Blog",
@@ -29,24 +30,30 @@
     "section": "Section",
     "settings": "Settings",
     "sidebar": "Sidebar",
+    "style": "Style",
     "text": "Text",
     "theme": "Theme",
     "typography": "Typography"
   },
   "labels": {
     "alignment": "Alignment",
+    "announcement_text": "Announcement text",
     "background": "Background",
+    "background_color": "Background color",
+    "font_size": "Font size",
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
     "input_corner_radius": "Input corner radius",
     "layout_direction": "Layout direction",
+    "link_url": "Link URL",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
     "padding": "Padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
+    "text_color": "Text color",
     "text_style": "Text style",
     "text": "Text"
   },
