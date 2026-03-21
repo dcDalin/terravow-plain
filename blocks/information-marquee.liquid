@@ -362,7 +362,7 @@
 
     handleItemClick(item) {
       const itemIndex = item.dataset.itemIndex;
-      const targetCard = this.marquee.querySelector(`[data-card-index="${itemIndex}"]`);
+      const targetCard = this.marquee.querySelector('[data-card-index="' + itemIndex + '"]');
 
       if (!targetCard) return;
 
