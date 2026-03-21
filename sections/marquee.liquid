@@ -3,7 +3,8 @@
   assign text_color = section.settings.text_color | default: '#ffffff'
   assign font_size = section.settings.font_size | default: 16
   assign speed = section.settings.speed | default: 30
-  assign padding = section.settings.padding | default: 16
+  assign padding_top = section.settings.padding_top | default: 16
+  assign padding_bottom = section.settings.padding_bottom | default: 16
   assign gap = section.settings.gap | default: 32
   assign direction = section.settings.direction | default: 'normal'
   assign separator = section.settings.separator | default: '•'
@@ -16,43 +17,31 @@
     --marquee-text: {{ text_color }};
     --marquee-font-size: {{ font_size }}px;
     --marquee-speed: {{ speed }}s;
-    --marquee-padding: {{ padding }}px;
+    --marquee-padding-top: {{ padding_top }}px;
+    --marquee-padding-bottom: {{ padding_bottom }}px;
     --marquee-gap: {{ gap }}px;
     --marquee-direction: {{ direction }};
   "
 >
   <div class="marquee-section__wrapper">
     <div class="marquee-section__content">
-      <div class="marquee-section__items">
-        {%- for block in section.blocks -%}
-          <div class="marquee-section__item" {{ block.shopify_attributes }}>
-            {%- if block.settings.icon != blank -%}
-              <span class="marquee-section__icon">{{ block.settings.icon }}</span>
+      {%- for i in (1..3) -%}
+        <div class="marquee-section__items" {% if i > 1 %}aria-hidden="true"{% endif %}>
+          {%- for block in section.blocks -%}
+            <div class="marquee-section__item" {% if i == 1 %}{{ block.shopify_attributes }}{% endif %}>
+              {%- if block.settings.icon != blank -%}
+                <span class="marquee-section__icon">{{ block.settings.icon }}</span>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <span class="marquee-section__text">{{ block.settings.text }}</span>
+              {%- endif -%}
+            </div>
+            {%- if separator != blank -%}
+              <span class="marquee-section__separator">{{ separator }}</span>
             {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <span class="marquee-section__text">{{ block.settings.text }}</span>
-            {%- endif -%}
-          </div>
-          {%- if separator != blank and forloop.last == false -%}
-            <span class="marquee-section__separator">{{ separator }}</span>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-      <div class="marquee-section__items" aria-hidden="true">
-        {%- for block in section.blocks -%}
-          <div class="marquee-section__item">
-            {%- if block.settings.icon != blank -%}
-              <span class="marquee-section__icon">{{ block.settings.icon }}</span>
-            {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <span class="marquee-section__text">{{ block.settings.text }}</span>
-            {%- endif -%}
-          </div>
-          {%- if separator != blank and forloop.last == false -%}
-            <span class="marquee-section__separator">{{ separator }}</span>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
     </div>
   </div>
 </div>
@@ -61,7 +50,7 @@
   .marquee-section {
     background-color: var(--marquee-bg);
     color: var(--marquee-text);
-    padding: var(--marquee-padding) 0;
+    padding: var(--marquee-padding-top) 0 var(--marquee-padding-bottom) 0;
     overflow: hidden;
     width: 100%;
   }
@@ -90,7 +79,7 @@
   .marquee-section__item {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .marquee-section__icon {
@@ -116,7 +105,7 @@
 
   @keyframes marquee-motion {
     to {
-      transform: translate3d(calc(-50% - (var(--marquee-gap) / 2)), 0, 0);
+      transform: translate3d(calc(-100% / 3), 0, 0);
     }
   }
 
@@ -180,8 +169,18 @@
     },
     {
       "type": "range",
-      "id": "padding",
-      "label": "t:labels.padding",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
       "min": 0,
       "max": 100,
       "step": 2,
