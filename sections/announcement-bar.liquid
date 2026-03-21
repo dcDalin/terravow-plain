@@ -40,8 +40,11 @@
   .announcement-bar {
     background-color: var(--announcement-bg);
     color: var(--announcement-text);
-    padding: var(--announcement-padding) 20px;
-    width: 100%;
+    padding: var(--announcement-padding) 0;
+    width: 100vw;
+    max-width: 100%;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     overflow: hidden;
   }
 
@@ -71,12 +74,6 @@
 
   .announcement-bar--right .announcement-bar__content {
     text-align: right;
-  }
-
-  @media (max-width: 768px) {
-    .announcement-bar {
-      padding: var(--announcement-padding) 16px;
-    }
   }
 {% endstylesheet %}
 

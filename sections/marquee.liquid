@@ -8,13 +8,13 @@
 -%}
 
 <div
-  class="marquee {{ section.settings.direction }}"
+  class="marquee {{ direction }}"
   style="
     --marquee-bg: {{ bg_color }};
     --marquee-text: {{ text_color }};
     --marquee-font-size: {{ font_size }}px;
     --marquee-speed: {{ speed }}s;
-    --marquee-padding: {{ padding }}px; 
+    --marquee-padding: {{ padding }}px;
   "
 >
   <div class="marquee__content">
@@ -40,7 +40,10 @@
     background-color: var(--marquee-bg);
     color: var(--marquee-text);
     padding: var(--marquee-padding) 0;
-    width: 100%;
+    width: 100vw;
+    max-width: 100%;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     overflow: hidden;
     position: relative;
   }
