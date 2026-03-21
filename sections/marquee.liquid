@@ -4,86 +4,112 @@
   assign font_size = section.settings.font_size | default: 16
   assign speed = section.settings.speed | default: 30
   assign padding = section.settings.padding | default: 16
+  assign gap = section.settings.gap | default: 32
+  assign direction = section.settings.direction | default: 'normal'
 -%}
 
 <div
-  class="marquee full-width {{ section.settings.direction | default: 'left' }}"
+  class="marquee-section full-width"
   style="
     --marquee-bg: {{ bg_color }};
     --marquee-text: {{ text_color }};
     --marquee-font-size: {{ font_size }}px;
     --marquee-speed: {{ speed }}s;
     --marquee-padding: {{ padding }}px;
+    --marquee-gap: {{ gap }}px;
+    --marquee-direction: {{ direction }};
   "
 >
-  <div class="marquee__content">
-    <span class="marquee__text">
-      {%- if section.settings.text != blank -%}
-        {{ section.settings.text }}
-      {%- else -%}
-        Welcome to our store • Free shipping on orders over $50 • Shop now
-      {%- endif -%}
-    </span>
-    <span class="marquee__text" aria-hidden="true">
-      {%- if section.settings.text != blank -%}
-        {{ section.settings.text }}
-      {%- else -%}
-        Welcome to our store • Free shipping on orders over $50 • Shop now
-      {%- endif -%}
-    </span>
+  <div class="marquee-section__wrapper">
+    <div class="marquee-section__content">
+      <div class="marquee-section__items">
+        {%- if section.settings.text != blank -%}
+          <span class="marquee-section__text">{{ section.settings.text }}</span>
+          {%- if section.settings.divider != blank -%}
+            <span class="marquee-section__divider">{{ section.settings.divider }}</span>
+          {%- endif -%}
+        {%- else -%}
+          <span class="marquee-section__text">Welcome to our store</span>
+          <span class="marquee-section__divider">•</span>
+          <span class="marquee-section__text">Free shipping on orders over $50</span>
+          <span class="marquee-section__divider">•</span>
+          <span class="marquee-section__text">Shop now</span>
+          <span class="marquee-section__divider">•</span>
+        {%- endif -%}
+      </div>
+      <div class="marquee-section__items" aria-hidden="true">
+        {%- if section.settings.text != blank -%}
+          <span class="marquee-section__text">{{ section.settings.text }}</span>
+          {%- if section.settings.divider != blank -%}
+            <span class="marquee-section__divider">{{ section.settings.divider }}</span>
+          {%- endif -%}
+        {%- else -%}
+          <span class="marquee-section__text">Welcome to our store</span>
+          <span class="marquee-section__divider">•</span>
+          <span class="marquee-section__text">Free shipping on orders over $50</span>
+          <span class="marquee-section__divider">•</span>
+          <span class="marquee-section__text">Shop now</span>
+          <span class="marquee-section__divider">•</span>
+        {%- endif -%}
+      </div>
+    </div>
   </div>
 </div>
 
 {% stylesheet %}
-  .marquee {
+  .marquee-section {
     background-color: var(--marquee-bg);
     color: var(--marquee-text);
     padding: var(--marquee-padding) 0;
     overflow: hidden;
-    position: relative;
+    width: 100%;
   }
 
-  .marquee__content {
+  .marquee-section__wrapper {
     display: flex;
+    gap: var(--marquee-gap);
     width: fit-content;
-    will-change: transform;
-  }
-
-  .marquee__text {
-    font-size: var(--marquee-font-size);
     white-space: nowrap;
-    padding-right: 4rem;
-    display: inline-block;
   }
 
-  .marquee.left .marquee__content {
-    animation: marquee-left var(--marquee-speed) linear infinite;
+  .marquee-section__content {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
   }
 
-  .marquee.right .marquee__content {
-    animation: marquee-right var(--marquee-speed) linear infinite;
+  .marquee-section__items {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
+    align-items: center;
+    font-size: var(--marquee-font-size);
   }
 
-  @keyframes marquee-left {
-    from {
-      transform: translateX(0);
+  .marquee-section__text {
+    white-space: nowrap;
+  }
+
+  .marquee-section__divider {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-section__wrapper {
+      animation: marquee-motion var(--marquee-speed) linear infinite var(--marquee-direction);
     }
+  }
+
+  @keyframes marquee-motion {
     to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @keyframes marquee-right {
-    from {
-      transform: translateX(-50%);
-    }
-    to {
-      transform: translateX(0);
+      transform: translate3d(calc(-50% - (var(--marquee-gap) / 2)), 0, 0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .marquee__content {
+    .marquee-section__wrapper {
       animation: none;
     }
   }
@@ -102,6 +128,13 @@
       "id": "text",
       "label": "t:labels.marquee_text",
       "default": "Welcome to our store • Free shipping on orders over $50 • Shop now"
+    },
+    {
+      "type": "text",
+      "id": "divider",
+      "label": "Divider",
+      "info": "Optional divider between repeated text",
+      "default": "•"
     },
     {
       "type": "header",
@@ -124,8 +157,8 @@
       "id": "font_size",
       "label": "t:labels.font_size",
       "min": 12,
-      "max": 32,
-      "step": 1,
+      "max": 120,
+      "step": 2,
       "unit": "px",
       "default": 16
     },
@@ -134,10 +167,20 @@
       "id": "padding",
       "label": "t:labels.padding",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 2,
       "unit": "px",
       "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between items",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
     },
     {
       "type": "header",
@@ -149,15 +192,15 @@
       "label": "t:labels.direction",
       "options": [
         {
-          "value": "left",
+          "value": "normal",
           "label": "t:options.direction.left"
         },
         {
-          "value": "right",
+          "value": "reverse",
           "label": "t:options.direction.right"
         }
       ],
-      "default": "left"
+      "default": "normal"
     },
     {
       "type": "range",
@@ -165,7 +208,7 @@
       "label": "t:labels.speed",
       "info": "t:labels.speed_info",
       "min": 10,
-      "max": 60,
+      "max": 100,
       "step": 5,
       "unit": "s",
       "default": 30
