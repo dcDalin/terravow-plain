@@ -3,6 +3,7 @@
   assign spacing_top = section.settings.spacing_top | default: 80
   assign spacing_bottom = section.settings.spacing_bottom | default: 80
   assign input_radius = section.settings.input_corner_radius | default: 8
+  assign title_alignment = section.settings.title_alignment | default: 'center'
 -%}
 
 <div
@@ -12,6 +13,7 @@
     --contact-form-spacing-top: {{ spacing_top }}px;
     --contact-form-spacing-bottom: {{ spacing_bottom }}px;
     --contact-form-input-radius: {{ input_radius }}px;
+    --contact-form-title-alignment: {{ title_alignment }};
   "
   {{ section.shopify_attributes }}
 >
@@ -129,7 +131,7 @@
   }
 
   .contact-form__title {
-    text-align: center;
+    text-align: var(--contact-form-title-alignment);
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 2rem 0;
@@ -236,6 +238,26 @@
       "id": "title",
       "label": "t:labels.title",
       "default": "Contact us"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "t:labels.alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.alignment.center"
+        },
+        {
+          "value": "right",
+          "label": "t:options.alignment.right"
+        }
+      ],
+      "default": "center"
     },
     {
       "type": "range",
