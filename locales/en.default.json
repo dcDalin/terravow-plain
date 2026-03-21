@@ -110,5 +110,37 @@
     "submit": "Search",
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "sections": {
+    "announcement_bar": {
+      "name": "Announcement bar",
+      "settings": {
+        "content": {
+          "header": "Content"
+        },
+        "text": {
+          "label": "Announcement text"
+        },
+        "link_url": {
+          "label": "Link URL",
+          "info": "Optional link when clicking the announcement"
+        },
+        "style": {
+          "header": "Style"
+        },
+        "background_color": {
+          "label": "Background color"
+        },
+        "text_color": {
+          "label": "Text color"
+        },
+        "font_size": {
+          "label": "Font size"
+        }
+      },
+      "presets": {
+        "name": "Announcement bar"
+      }
+    }
   }
 }

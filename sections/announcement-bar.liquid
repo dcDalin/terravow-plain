@@ -1,0 +1,150 @@
+<div
+  class="announcement-bar {{ section.settings.text_alignment }}"
+  style="
+    --announcement-bg: {{ section.settings.background_color }};
+    --announcement-text: {{ section.settings.text_color }};
+    --announcement-font-size: {{ section.settings.font_size }}px;
+    --announcement-padding: {{ section.settings.padding }}px;
+  "
+>
+  {% if section.settings.link_url != blank %}
+    <a href="{{ section.settings.link_url }}" class="announcement-bar__link">
+      <div class="announcement-bar__content">
+        {{ section.settings.text }}
+      </div>
+    </a>
+  {% else %}
+    <div class="announcement-bar__content">
+      {{ section.settings.text }}
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .announcement-bar {
+    background-color: var(--announcement-bg);
+    color: var(--announcement-text);
+    padding: var(--announcement-padding) 20px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .announcement-bar__link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    transition: opacity 0.2s ease;
+  }
+
+  .announcement-bar__link:hover {
+    opacity: 0.8;
+  }
+
+  .announcement-bar__content {
+    font-size: var(--announcement-font-size);
+    line-height: 1.4;
+  }
+
+  .announcement-bar--left .announcement-bar__content {
+    text-align: left;
+  }
+
+  .announcement-bar--center .announcement-bar__content {
+    text-align: center;
+  }
+
+  .announcement-bar--right .announcement-bar__content {
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    .announcement-bar {
+      padding: var(--announcement-padding) 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.announcement_bar.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.announcement_bar.settings.content.header"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.announcement_bar.settings.text.label",
+      "default": "<p>Welcome to our store!</p>"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "t:sections.announcement_bar.settings.link_url.label",
+      "info": "t:sections.announcement_bar.settings.link_url.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement_bar.settings.style.header"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.announcement_bar.settings.background_color.label",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.announcement_bar.settings.text_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:labels.alignment",
+      "options": [
+        {
+          "value": "announcement-bar--left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "announcement-bar--center",
+          "label": "t:options.alignment.center"
+        },
+        {
+          "value": "announcement-bar--right",
+          "label": "t:options.alignment.right"
+        }
+      ],
+      "default": "announcement-bar--center"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "t:sections.announcement_bar.settings.font_size.label",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "t:labels.padding",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.announcement_bar.presets.name"
+    }
+  ]
+}
+{% endschema %}
