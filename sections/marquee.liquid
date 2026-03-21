@@ -101,6 +101,10 @@
     .marquee-section__wrapper {
       animation: marquee-motion var(--marquee-speed) linear infinite var(--marquee-direction);
     }
+
+    .marquee-section:has(.marquee-section__item:hover) .marquee-section__wrapper {
+      animation-play-state: paused;
+    }
   }
 
   @keyframes marquee-motion {
