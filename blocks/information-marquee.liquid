@@ -28,6 +28,22 @@
       assign spacing_top = 0
     endif
   endunless
+
+  # Calculate cards gap based on size and spacing settings
+  assign cards_gap = 32
+  case size
+    when 'small'
+      assign cards_gap = 24
+    when 'medium'
+      assign cards_gap = 32
+    when 'large'
+      assign cards_gap = 40
+  endcase
+
+  # If bottom spacing is very small, reduce cards gap proportionally
+  if spacing_bottom < 20
+    assign cards_gap = 0
+  endif
 -%}
 
 <div
@@ -43,6 +59,7 @@
     --info-marquee-spacing-top: {{ spacing_top }}px;
     --info-marquee-spacing-bottom: {{ spacing_bottom }}px;
     --info-marquee-spacing-sides: {{ spacing_sides }}px;
+    --info-marquee-cards-gap: {{ cards_gap }}px;
     --marquee-speed: {{ block.settings.marquee_speed }}s;
   "
   {{ block.shopify_attributes }}
@@ -83,42 +100,45 @@
     </div>
   </div>
 
-  <div class="information-marquee__cards">
-    {%- for item in (1..5) -%}
-      {%- liquid
-        assign item_title_key = 'item_' | append: item | append: '_title'
-        assign item_subtitle_key = 'item_' | append: item | append: '_subtitle'
-        assign item_body_key = 'item_' | append: item | append: '_body'
+  <div class="information-marquee__cards-wrapper">
+    <div class="information-marquee__cards">
+      {%- for item in (1..5) -%}
+        {%- liquid
+          assign item_title_key = 'item_' | append: item | append: '_title'
+          assign item_subtitle_key = 'item_' | append: item | append: '_subtitle'
+          assign item_body_key = 'item_' | append: item | append: '_body'
 
-        assign item_title = block.settings[item_title_key]
-        assign item_subtitle = block.settings[item_subtitle_key]
-        assign item_body = block.settings[item_body_key]
-      -%}
+          assign item_title = block.settings[item_title_key]
+          assign item_subtitle = block.settings[item_subtitle_key]
+          assign item_body = block.settings[item_body_key]
+        -%}
 
-      {%- if item_title != blank -%}
-        <div
-          id="marquee-card-{{ block.id }}-{{ item }}"
-          class="information-marquee__card"
-          data-card-index="{{ item }}"
-          hidden
-        >
-          {%- if item_subtitle != blank -%}
-            <h4 class="information-marquee__card-subtitle">{{ item_subtitle }}</h4>
-          {%- endif -%}
-          {%- if item_body != blank -%}
-            <div class="information-marquee__card-body">{{ item_body }}</div>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
-    {%- endfor -%}
+        {%- if item_title != blank -%}
+          <div
+            id="marquee-card-{{ block.id }}-{{ item }}"
+            class="information-marquee__card"
+            data-card-index="{{ item }}"
+            hidden
+          >
+            {%- if item_subtitle != blank -%}
+              <h4 class="information-marquee__card-subtitle">{{ item_subtitle }}</h4>
+            {%- endif -%}
+            {%- if item_body != blank -%}
+              <div class="information-marquee__card-body">{{ item_body }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
   </div>
 </div>
 
 {% stylesheet %}
   .information-marquee {
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     padding: var(--info-marquee-spacing-top) var(--info-marquee-spacing-sides) var(--info-marquee-spacing-bottom);
+    position: relative;
   }
 
   .information-marquee__title {
@@ -163,6 +183,7 @@
       black 90%,
       transparent
     );
+    z-index: 1;
   }
 
   .information-marquee__track {
@@ -253,33 +274,30 @@
     border-color: var(--info-marquee-active-bg);
   }
 
+  .information-marquee__cards-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: var(--info-marquee-cards-gap);
+    z-index: 50;
+    pointer-events: none;
+  }
+
   .information-marquee__cards {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
     padding: 0 var(--info-marquee-spacing-sides);
-  }
-
-  /* Medium size cards spacing */
-  .information-marquee--medium .information-marquee__cards {
-    margin-top: 2rem;
-  }
-
-  /* Small size cards spacing */
-  .information-marquee--small .information-marquee__cards {
-    margin-top: 1.5rem;
-  }
-
-  /* Large size cards spacing */
-  .information-marquee--large .information-marquee__cards {
-    margin-top: 2.5rem;
+    pointer-events: auto;
   }
 
   .information-marquee__card {
-    background-color: #f9fafb;
+    background-color: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    animation: slide-down 0.3s ease;
+    animation: slide-down 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   }
 
   .information-marquee__card[hidden] {
@@ -349,11 +367,11 @@
   @keyframes slide-down {
     from {
       opacity: 0;
-      transform: translateY(-10px);
+      transform: translateY(-8px) scale(0.98);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
