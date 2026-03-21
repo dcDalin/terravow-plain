@@ -72,10 +72,22 @@
     "main": {
       "type": "hello-world",
       "settings": {}
+    },
+    "contact_form_E6aFxj": {
+      "type": "contact-form",
+      "name": "t:general.contact_form",
+      "settings": {
+        "title": "Contact us",
+        "max_width": 600,
+        "input_corner_radius": 30,
+        "spacing_top": 80,
+        "spacing_bottom": 80
+      }
     }
   },
   "order": [
     "custom_section_AWwyrf",
-    "main"
+    "main",
+    "contact_form_E6aFxj"
   ]
 }
