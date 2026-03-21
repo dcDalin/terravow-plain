@@ -9,10 +9,6 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
-      "settings": {}
-    },
     "custom_section_AWwyrf": {
       "type": "custom-section",
       "blocks": {
@@ -72,10 +68,14 @@
       ],
       "name": "t:general.custom_section",
       "settings": {}
+    },
+    "main": {
+      "type": "hello-world",
+      "settings": {}
     }
   },
   "order": [
-    "main",
-    "custom_section_AWwyrf"
+    "custom_section_AWwyrf",
+    "main"
   ]
 }
