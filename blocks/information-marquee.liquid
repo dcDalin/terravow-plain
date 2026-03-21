@@ -5,75 +5,21 @@
   {% content_for 'block', type: 'information-marquee', id: 'info-marquee' %}
 {% enddoc %}
 
-{%- liquid
-  assign bg_color = block.settings.background_color | default: '#ffffff'
-  assign text_color = block.settings.text_color | default: '#1f2937'
-  assign hover_bg = block.settings.hover_background_color | default: '#1f2937'
-  assign hover_text = block.settings.hover_text_color | default: '#ffffff'
-  assign active_bg = block.settings.active_background_color | default: '#000000'
-  assign active_text = block.settings.active_text_color | default: '#ffffff'
-  assign size = block.settings.size | default: 'medium'
-  assign spacing_top = block.settings.spacing_top | default: 48
-  assign spacing_bottom = block.settings.spacing_bottom | default: 48
-  assign spacing_sides = block.settings.spacing_sides | default: 16
-
-  assign has_title = false
-  if block.settings.title != blank
-    assign has_title = true
-  endif
-
-  unless has_title
-    assign spacing_top = spacing_top | minus: 32
-    if spacing_top < 0
-      assign spacing_top = 0
-    endif
-  endunless
-
-  # Calculate cards gap based on size and spacing settings
-  assign cards_gap = 32
-  case size
-    when 'small'
-      assign cards_gap = 24
-    when 'medium'
-      assign cards_gap = 32
-    when 'large'
-      assign cards_gap = 40
-  endcase
-
-  # If bottom spacing is very small, reduce cards gap proportionally
-  if spacing_bottom < 20
-    assign cards_gap = 0
-  endif
--%}
-
 <div
-  class="information-marquee information-marquee--{{ size }}"
-  data-has-title="{{ has_title }}"
-  style="
-    --info-marquee-bg: {{ bg_color }};
-    --info-marquee-text: {{ text_color }};
-    --info-marquee-hover-bg: {{ hover_bg }};
-    --info-marquee-hover-text: {{ hover_text }};
-    --info-marquee-active-bg: {{ active_bg }};
-    --info-marquee-active-text: {{ active_text }};
-    --info-marquee-spacing-top: {{ spacing_top }}px;
-    --info-marquee-spacing-bottom: {{ spacing_bottom }}px;
-    --info-marquee-spacing-sides: {{ spacing_sides }}px;
-    --info-marquee-cards-gap: {{ cards_gap }}px;
-    --marquee-speed: {{ block.settings.marquee_speed }}s;
-  "
+  class="information-marquee"
+  data-marquee-speed="{{ block.settings.marquee_speed }}"
   {{ block.shopify_attributes }}
 >
-  {%- if block.settings.title != blank -%}
+  {% if block.settings.title != blank %}
     <h3 class="information-marquee__title">{{ block.settings.title }}</h3>
-  {%- endif -%}
+  {% endif %}
 
   <div class="information-marquee__container">
     <div class="information-marquee__track" data-marquee-track>
-      {%- for i in (1..3) -%}
+      {% for i in (1..3) %}
         <div class="information-marquee__content">
-          {%- for item in (1..5) -%}
-            {%- liquid
+          {% for item in (1..5) %}
+            {% liquid
               assign item_title_key = 'item_' | append: item | append: '_title'
               assign item_subtitle_key = 'item_' | append: item | append: '_subtitle'
               assign item_body_key = 'item_' | append: item | append: '_body'
@@ -81,9 +27,9 @@
               assign item_title = block.settings[item_title_key]
               assign item_subtitle = block.settings[item_subtitle_key]
               assign item_body = block.settings[item_body_key]
-            -%}
+            %}
 
-            {%- if item_title != blank -%}
+            {% if item_title != blank %}
               <button
                 type="button"
                 class="information-marquee__item"
@@ -93,80 +39,55 @@
               >
                 {{ item_title }}
               </button>
-            {%- endif -%}
-          {%- endfor -%}
+            {% endif %}
+          {% endfor %}
         </div>
-      {%- endfor -%}
+      {% endfor %}
     </div>
   </div>
 
-  <div class="information-marquee__cards-wrapper">
-    <div class="information-marquee__cards">
-      {%- for item in (1..5) -%}
-        {%- liquid
-          assign item_title_key = 'item_' | append: item | append: '_title'
-          assign item_subtitle_key = 'item_' | append: item | append: '_subtitle'
-          assign item_body_key = 'item_' | append: item | append: '_body'
+  <div class="information-marquee__cards">
+    {% for item in (1..5) %}
+      {% liquid
+        assign item_title_key = 'item_' | append: item | append: '_title'
+        assign item_subtitle_key = 'item_' | append: item | append: '_subtitle'
+        assign item_body_key = 'item_' | append: item | append: '_body'
 
-          assign item_title = block.settings[item_title_key]
-          assign item_subtitle = block.settings[item_subtitle_key]
-          assign item_body = block.settings[item_body_key]
-        -%}
+        assign item_title = block.settings[item_title_key]
+        assign item_subtitle = block.settings[item_subtitle_key]
+        assign item_body = block.settings[item_body_key]
+      %}
 
-        {%- if item_title != blank -%}
-          <div
-            id="marquee-card-{{ block.id }}-{{ item }}"
-            class="information-marquee__card"
-            data-card-index="{{ item }}"
-            hidden
-          >
-            {%- if item_subtitle != blank -%}
-              <h4 class="information-marquee__card-subtitle">{{ item_subtitle }}</h4>
-            {%- else -%}
-              <h4 class="information-marquee__card-subtitle">{{ item_title }}</h4>
-            {%- endif -%}
-            {%- if item_body != blank -%}
-              <div class="information-marquee__card-body">{{ item_body }}</div>
-            {%- else -%}
-              <div class="information-marquee__card-body">Click on an item above to see details.</div>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
+      {% if item_title != blank %}
+        <div
+          id="marquee-card-{{ block.id }}-{{ item }}"
+          class="information-marquee__card"
+          data-card-index="{{ item }}"
+          hidden
+        >
+          {% if item_subtitle != blank %}
+            <h4 class="information-marquee__card-subtitle">{{ item_subtitle }}</h4>
+          {% endif %}
+          {% if item_body != blank %}
+            <div class="information-marquee__card-body">{{ item_body }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 </div>
 
 {% stylesheet %}
   .information-marquee {
     width: 100%;
-    padding: var(--info-marquee-spacing-top) var(--info-marquee-spacing-sides) var(--info-marquee-spacing-bottom);
-    position: relative;
-    overflow: visible;
+    padding: 2rem 0;
   }
 
   .information-marquee__title {
     text-align: center;
-    margin: 0;
-    font-weight: 600;
-  }
-
-  /* Medium size title */
-  .information-marquee--medium .information-marquee__title {
+    margin: 0 0 2rem 0;
     font-size: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  /* Small size title */
-  .information-marquee--small .information-marquee__title {
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Large size title */
-  .information-marquee--large .information-marquee__title {
-    font-size: 1.75rem;
-    margin-bottom: 2.5rem;
+    font-weight: 600;
   }
 
   .information-marquee__container {
@@ -191,6 +112,7 @@
 
   .information-marquee__track {
     display: flex;
+    gap: 1rem;
     width: fit-content;
     animation: marquee-scroll var(--marquee-speed, 20s) linear infinite;
   }
@@ -205,101 +127,50 @@
 
   .information-marquee__content {
     display: flex;
+    gap: 1rem;
     flex-shrink: 0;
   }
 
-  /* Medium size gaps */
-  .information-marquee--medium .information-marquee__track {
-    gap: 1rem;
-  }
-
-  .information-marquee--medium .information-marquee__content {
-    gap: 1rem;
-  }
-
-  /* Small size gaps */
-  .information-marquee--small .information-marquee__track {
-    gap: 0.75rem;
-  }
-
-  .information-marquee--small .information-marquee__content {
-    gap: 0.75rem;
-  }
-
-  /* Large size gaps */
-  .information-marquee--large .information-marquee__track {
-    gap: 1.25rem;
-  }
-
-  .information-marquee--large .information-marquee__content {
-    gap: 1.25rem;
-  }
-
   .information-marquee__item {
-    background-color: var(--info-marquee-bg);
+    padding: 0.75rem 1.5rem;
+    background-color: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 100px;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     font-family: inherit;
-    font-weight: 700;
-    color: var(--info-marquee-text);
-  }
-
-  /* Medium size (default) */
-  .information-marquee--medium .information-marquee__item {
-    padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
-  }
-
-  /* Small size */
-  .information-marquee--small .information-marquee__item {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-  }
-
-  /* Large size */
-  .information-marquee--large .information-marquee__item {
-    padding: 1rem 2rem;
-    font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
   }
 
   .information-marquee__item:hover {
-    background-color: var(--info-marquee-hover-bg);
-    color: var(--info-marquee-hover-text);
-    border-color: var(--info-marquee-hover-bg);
+    background-color: #1f2937;
+    color: #ffffff;
+    border-color: #1f2937;
   }
 
   .information-marquee__item[aria-expanded='true'] {
-    background-color: var(--info-marquee-active-bg);
-    color: var(--info-marquee-active-text);
-    border-color: var(--info-marquee-active-bg);
-  }
-
-  .information-marquee__cards-wrapper {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    z-index: 1000;
-    pointer-events: none;
-    margin-top: 1rem;
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
   }
 
   .information-marquee__cards {
+    margin-top: 2rem;
     max-width: 800px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
     padding: 0 1rem;
-    pointer-events: auto;
   }
 
   .information-marquee__card {
+    padding: 2rem;
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    animation: slide-down 0.3s ease;
   }
 
   .information-marquee__card[hidden] {
@@ -308,6 +179,7 @@
 
   .information-marquee__card-subtitle {
     margin: 0 0 1rem 0;
+    font-size: 1.25rem;
     font-weight: 600;
     color: #111827;
   }
@@ -316,46 +188,6 @@
     margin: 0;
     line-height: 1.6;
     color: #6b7280;
-  }
-
-  /* Small size */
-  .information-marquee--small .information-marquee__card {
-    padding: 1.25rem;
-  }
-
-  .information-marquee--small .information-marquee__card-subtitle {
-    font-size: 1rem;
-  }
-
-  .information-marquee--small .information-marquee__card-body {
-    font-size: 0.875rem;
-  }
-
-  /* Medium size (default) */
-  .information-marquee--medium .information-marquee__card {
-    padding: 2rem;
-  }
-
-  .information-marquee--medium .information-marquee__card-subtitle {
-    font-size: 1.25rem;
-  }
-
-  .information-marquee--medium .information-marquee__card-body {
-    font-size: 1rem;
-  }
-
-  /* Large size */
-  .information-marquee--large .information-marquee__card {
-    padding: 2.5rem;
-  }
-
-  .information-marquee--large .information-marquee__card-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .information-marquee--large .information-marquee__card-body {
-    font-size: 1.125rem;
   }
 
   @keyframes marquee-scroll {
@@ -370,11 +202,11 @@
   @keyframes slide-down {
     from {
       opacity: 0;
-      transform: translateY(-8px) scale(0.98);
+      transform: translateY(-10px);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
   }
 
@@ -386,76 +218,76 @@
 {% endstylesheet %}
 
 {% javascript %}
-  (function() {
-    function initInformationMarquee(element) {
-      if (element.hasAttribute('data-marquee-initialized')) {
-        return;
-      }
-      element.setAttribute('data-marquee-initialized', 'true');
+  class InformationMarquee {
+    constructor(element) {
+      this.marquee = element;
+      this.track = this.marquee.querySelector('[data-marquee-track]');
+      this.items = this.marquee.querySelectorAll('.information-marquee__item');
+      this.cards = this.marquee.querySelectorAll('.information-marquee__card');
+      this.currentActiveItem = null;
 
-      const track = element.querySelector('[data-marquee-track]');
-      const items = element.querySelectorAll('.information-marquee__item');
-      const cards = element.querySelectorAll('.information-marquee__card');
-      let currentActiveItem = null;
+      this.init();
+    }
 
-      items.forEach(item => {
-        item.addEventListener('click', function(e) {
+    init() {
+      this.items.forEach(item => {
+        item.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-
-          const itemIndex = this.dataset.itemIndex;
-          const targetCard = element.querySelector('[data-card-index="' + itemIndex + '"]');
-
-          if (!targetCard) {
-            return;
-          }
-
-          if (track) {
-            track.setAttribute('data-paused', 'true');
-          }
-
-          if (currentActiveItem === this) {
-            items.forEach(i => i.setAttribute('aria-expanded', 'false'));
-            cards.forEach(c => c.hidden = true);
-            if (track) track.setAttribute('data-paused', 'false');
-            currentActiveItem = null;
-            return;
-          }
-
-          items.forEach(i => i.setAttribute('aria-expanded', 'false'));
-          cards.forEach(c => c.hidden = true);
-
-          this.setAttribute('aria-expanded', 'true');
-          targetCard.hidden = false;
-          targetCard.removeAttribute('hidden');
-          currentActiveItem = this;
+          this.handleItemClick(e.currentTarget);
         });
       });
 
-      document.addEventListener('click', function(e) {
-        if (!element.contains(e.target)) {
-          items.forEach(i => i.setAttribute('aria-expanded', 'false'));
-          cards.forEach(c => c.hidden = true);
-          if (track) track.setAttribute('data-paused', 'false');
-          currentActiveItem = null;
+      document.addEventListener('click', (e) => {
+        if (!this.marquee.contains(e.target)) {
+          this.closeAll();
         }
       });
     }
 
-    function init() {
-      document.querySelectorAll('.information-marquee').forEach(initInformationMarquee);
+    handleItemClick(item) {
+      const itemIndex = item.dataset.itemIndex;
+      const targetCard = this.marquee.querySelector(`[data-card-index="${itemIndex}"]`);
+
+      if (!targetCard) return;
+
+      this.track.setAttribute('data-paused', 'true');
+
+      if (this.currentActiveItem === item) {
+        this.closeAll();
+        return;
+      }
+
+      this.items.forEach(i => i.setAttribute('aria-expanded', 'false'));
+      this.cards.forEach(c => c.hidden = true);
+
+      item.setAttribute('aria-expanded', 'true');
+      targetCard.hidden = false;
+      this.currentActiveItem = item;
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
+    closeAll() {
+      this.items.forEach(i => i.setAttribute('aria-expanded', 'false'));
+      this.cards.forEach(c => c.hidden = true);
+      this.track.setAttribute('data-paused', 'false');
+      this.currentActiveItem = null;
     }
+  }
 
-    if (typeof Shopify !== 'undefined' && Shopify.designMode) {
-      document.addEventListener('shopify:section:load', init);
-    }
-  })();
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.information-marquee').forEach(marquee => {
+      new InformationMarquee(marquee);
+    });
+  });
+
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    document.querySelectorAll('.information-marquee').forEach(marquee => {
+      if (!marquee.hasAttribute('data-marquee-initialized')) {
+        marquee.setAttribute('data-marquee-initialized', 'true');
+        new InformationMarquee(marquee);
+      }
+    });
+  }
 {% endjavascript %}
 
 {% schema %}
@@ -478,101 +310,6 @@
       "step": 5,
       "unit": "s",
       "default": 20
-    },
-    {
-      "type": "select",
-      "id": "size",
-      "label": "t:labels.size",
-      "options": [
-        {
-          "value": "small",
-          "label": "t:options.size.small"
-        },
-        {
-          "value": "medium",
-          "label": "t:options.size.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:options.size.large"
-        }
-      ],
-      "default": "medium"
-    },
-    {
-      "type": "header",
-      "content": "t:labels.spacing"
-    },
-    {
-      "type": "range",
-      "id": "spacing_top",
-      "label": "t:labels.spacing_top",
-      "info": "t:labels.spacing_top_info",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 48
-    },
-    {
-      "type": "range",
-      "id": "spacing_bottom",
-      "label": "t:labels.spacing_bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 48
-    },
-    {
-      "type": "range",
-      "id": "spacing_sides",
-      "label": "t:labels.spacing_sides",
-      "min": 0,
-      "max": 80,
-      "step": 4,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "header",
-      "content": "t:general.colors"
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "t:labels.background_color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "t:labels.text_color",
-      "default": "#1f2937"
-    },
-    {
-      "type": "color",
-      "id": "hover_background_color",
-      "label": "t:labels.hover_background_color",
-      "default": "#1f2937"
-    },
-    {
-      "type": "color",
-      "id": "hover_text_color",
-      "label": "t:labels.hover_text_color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "active_background_color",
-      "label": "t:labels.active_background_color",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "active_text_color",
-      "label": "t:labels.active_text_color",
-      "default": "#ffffff"
     },
     {
       "type": "header",
