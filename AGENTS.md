@@ -2,6 +2,113 @@
 
 🚨 MANDATORY: YOU MUST CALL "learn_shopify_api" ONCE WHEN WORKING WITH LIQUID THEMES.
 
+## Quick Start: Creating a New Section
+
+**Follow these steps exactly to create a working section:**
+
+### Step 1: Create the Section File
+
+Create `sections/section-name.liquid` with this structure:
+
+```liquid
+{%- liquid
+  # Use liquid variables with defaults for all settings
+  assign setting_value = section.settings.setting_name | default: 'default_value'
+-%}
+
+<div class="section-name">
+  <!-- Your HTML here -->
+</div>
+
+{% stylesheet %}
+  .section-name {
+    /* Your CSS here */
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.section_name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "text",
+      "id": "setting_name",
+      "label": "t:labels.setting_name",
+      "default": "Default value"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.section_name",
+      "category": "t:general.category_name"
+    }
+  ]
+}
+{% endschema %}
+```
+
+**CRITICAL REQUIREMENTS:**
+- ✅ Use `inline_richtext` for single-line text, `richtext` for multi-line
+- ✅ All schema strings MUST use translation keys (t:general.xxx, t:labels.xxx, t:options.xxx)
+- ✅ Presets MUST include a `category` field to appear in theme editor
+- ✅ Use liquid variables with `| default:` filters for all settings
+
+### Step 2: Add Schema Translations
+
+Update `locales/en.default.schema.json` (for theme editor):
+
+```json
+{
+  "general": {
+    "section_name": "Section Name",
+    "category_name": "Category Name"
+  },
+  "labels": {
+    "setting_name": "Setting label"
+  }
+}
+```
+
+**CRITICAL: NO TRAILING COMMAS in JSON!**
+
+### Step 3: Add Runtime Translations (if needed)
+
+Update `locales/en.default.json` only for runtime user-facing text:
+
+```json
+{
+  "sections": {
+    "section_name": {
+      "button_text": "Click here"
+    }
+  }
+}
+```
+
+### Step 4: Verify
+
+1. Check JSON is valid (no trailing commas)
+2. All translation keys are defined
+3. Category is included in presets
+4. Test in Shopify theme editor
+
+### Common Mistakes to Avoid
+
+❌ **Trailing commas in JSON** - Will break entire theme editor
+❌ **Missing category in presets** - Section won't appear in theme editor
+❌ **Using hardcoded text instead of t: keys** - Shows "missing translation" errors
+❌ **Schema translations in en.default.json** - Must be in en.default.schema.json
+❌ **Using `richtext` for single-line text** - Use `inline_richtext` instead
+❌ **No default values** - Can cause empty sections
+
+### Real-World Example: Announcement Bar
+
+See `sections/announcement-bar.liquid` for a complete working example.
+
 ## Theme Architecture
 
 **Key principles: focus on generating snippets, blocks, and sections; users may create templates using the theme editor**
@@ -1421,67 +1528,204 @@ Schema locale files, saved with a .schema.json extension, store translation stri
 
 ### `section`
 
-```liquid
-<div class="example-section full-width">
-  {% if section.settings.background_image %}
-    <div class="example-section__background">
-      {{ section.settings.background_image | image_url: width: 2000 | image_tag }}
-    </div>
-  {% endif %}
+**Complete Section Example with Translations:**
 
-  <div class="custom-section__content">
-    {% content_for 'blocks' %}
-  </div>
+#### File: `sections/announcement-bar.liquid`
+
+```liquid
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#000000'
+  assign text_color = section.settings.text_color | default: '#ffffff'
+  assign font_size = section.settings.font_size | default: 14
+  assign padding = section.settings.padding | default: 12
+  assign alignment = section.settings.text_alignment | default: 'announcement-bar--center'
+-%}
+
+<div
+  class="announcement-bar {{ alignment }}"
+  style="
+    --announcement-bg: {{ bg_color }};
+    --announcement-text: {{ text_color }};
+    --announcement-font-size: {{ font_size }}px;
+    --announcement-padding: {{ padding }}px;
+  "
+>
+  {%- if section.settings.link_url != blank -%}
+    <a href="{{ section.settings.link_url }}" class="announcement-bar__link">
+      <div class="announcement-bar__content">
+        {%- if section.settings.text != blank -%}
+          {{ section.settings.text }}
+        {%- else -%}
+          Welcome to our store!
+        {%- endif -%}
+      </div>
+    </a>
+  {%- else -%}
+    <div class="announcement-bar__content">
+      {%- if section.settings.text != blank -%}
+        {{ section.settings.text }}
+      {%- else -%}
+        Welcome to our store!
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
-  .example-section {
-    position: relative;
+  .announcement-bar {
+    background-color: var(--announcement-bg);
+    color: var(--announcement-text);
+    padding: var(--announcement-padding) 20px;
+    width: 100%;
     overflow: hidden;
-    width: 100%;
-  }
-  .example-section__background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
-  }
-  .example-section__background img {
-    position: absolute;
-    width: 100%;
-    height: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .example-section__content {
-    display: grid;
-    grid-template-columns: var(--content-grid);
   }
 
-  .example-section__content > * {
-    grid-column: 2;
+  .announcement-bar__link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    transition: opacity 0.2s ease;
+  }
+
+  .announcement-bar__link:hover {
+    opacity: 0.8;
+  }
+
+  .announcement-bar__content {
+    font-size: var(--announcement-font-size);
+    line-height: 1.4;
+  }
+
+  .announcement-bar--left .announcement-bar__content {
+    text-align: left;
+  }
+
+  .announcement-bar--center .announcement-bar__content {
+    text-align: center;
+  }
+
+  .announcement-bar--right .announcement-bar__content {
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    .announcement-bar {
+      padding: var(--announcement-padding) 16px;
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.custom_section",
-  "blocks": [{ "type": "@theme" }],
+  "name": "t:general.announcement_bar",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "background_image",
-      "label": "t:labels.background"
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "t:labels.announcement_text",
+      "default": "Welcome to our store! Free shipping on orders over $50"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "t:labels.link_url",
+      "info": "Optional link when clicking the announcement"
+    },
+    {
+      "type": "header",
+      "content": "t:general.style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:labels.background_color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:labels.text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:labels.alignment",
+      "options": [
+        {
+          "value": "announcement-bar--left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "announcement-bar--center",
+          "label": "t:options.alignment.center"
+        },
+        {
+          "value": "announcement-bar--right",
+          "label": "t:options.alignment.right"
+        }
+      ],
+      "default": "announcement-bar--center"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "t:labels.font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "t:labels.padding",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 12
     }
   ],
   "presets": [
     {
-      "name": "t:general.custom_section"
+      "name": "t:general.announcement_bar",
+      "category": "t:general.header"
     }
   ]
 }
 {% endschema %}
 ```
+
+#### File: `locales/en.default.schema.json` (add these keys)
+
+```json
+{
+  "general": {
+    "announcement_bar": "Announcement bar",
+    "style": "Style"
+  },
+  "labels": {
+    "announcement_text": "Announcement text",
+    "background_color": "Background color",
+    "text_color": "Text color",
+    "font_size": "Font size",
+    "link_url": "Link URL"
+  }
+}
+```
+
+**Key Points:**
+- ✅ Uses `inline_richtext` for single-line text
+- ✅ All settings have defaults via liquid `| default:` filter
+- ✅ CSS uses CSS variables for dynamic styling
+- ✅ Includes `category` in presets for theme editor organization
+- ✅ All strings use translation keys (t:general.xxx, t:labels.xxx)
+- ✅ No trailing commas in JSON
+- ✅ Responsive design with media queries
 
