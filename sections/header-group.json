@@ -17,9 +17,23 @@
         "menu": "main-menu",
         "customer_account_menu": "customer-account-main-menu"
       }
+    },
+    "marquee_xqLPeY": {
+      "type": "marquee",
+      "name": "t:general.marquee",
+      "settings": {
+        "text": "Welcome to our store • Free shipping on orders over $50 • Shop now",
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "font_size": 16,
+        "padding": 16,
+        "direction": "left",
+        "speed": 30
+      }
     }
   },
   "order": [
-    "header"
+    "header",
+    "marquee_xqLPeY"
   ]
 }

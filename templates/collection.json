@@ -12,9 +12,15 @@
     "main": {
       "type": "collection",
       "settings": {}
+    },
+    "custom_section_bHRKyD": {
+      "type": "custom-section",
+      "name": "t:general.custom_section",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "custom_section_bHRKyD"
   ]
 }
