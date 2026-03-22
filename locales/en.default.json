@@ -132,6 +132,7 @@
     "featured_collection": {
       "price_from": "Price range:",
       "view_product": "View product",
+      "view_all": "View all products",
       "no_products": "No products in this collection",
       "carousel_navigation": "Carousel navigation"
     }

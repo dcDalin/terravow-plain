@@ -23,6 +23,7 @@
     "column": "Column",
     "contact_form": "Contact form",
     "content": "Content",
+    "display_options": "Display options",
     "custom_section": "Custom section",
     "featured_collection": "Featured collection",
     "fonts": "Fonts",
@@ -59,6 +60,8 @@
     "background_color": "Background color",
     "body": "Body",
     "collection": "Collection",
+    "cta_text": "Button text",
+    "cta_text_info": "Text shown on the product view button",
     "direction": "Direction",
     "font_size": "Font size",
     "foreground": "Foreground",
@@ -86,6 +89,7 @@
     "page_margin": "Page margin",
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
+    "show_ratings": "Show star ratings",
     "size": "Size",
     "spacing": "Spacing",
     "spacing_top": "Top spacing",
@@ -98,7 +102,9 @@
     "text_color": "Text color",
     "text_style": "Text style",
     "text": "Text",
-    "title": "Title"
+    "title": "Title",
+    "view_all_text": "View all button text",
+    "view_all_text_info": "Text shown on the view all products button"
   },
   "options": {
     "alignment": {

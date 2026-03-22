@@ -21,41 +21,89 @@
         >
           <div class="featured-collection__carousel">
             {%- for product in selected_collection.products limit: 12 -%}
+              {%- liquid
+                assign media_count = product.media.size
+                if media_count > 5
+                  assign media_count = 5
+                endif
+              -%}
               <div class="featured-collection__card">
-                {%- if product.featured_image -%}
-                  <a href="{{ product.url }}" class="featured-collection__card-image-link">
-                    {%- render 'image',
-                      class: 'featured-collection__card-image',
-                      image: product.featured_image,
-                      width: 300,
-                      height: 300,
-                      crop: 'center'
-                    -%}
-                  </a>
-                {%- endif -%}
+                <div class="featured-collection__card-image-wrapper" data-product-card-gallery>
+                  <div class="featured-collection__card-images" data-images-container>
+                    {%- if product.media.size > 0 -%}
+                      {%- for media in product.media limit: 5 -%}
+                        <a
+                          href="{{ product.url }}"
+                          class="featured-collection__card-image-link {% if forloop.first %}active{% endif %}"
+                          data-image-slide="{{ forloop.index0 }}"
+                        >
+                          {%- if media.media_type == 'image' -%}
+                            {%- render 'image',
+                              class: 'featured-collection__card-image',
+                              image: media.preview_image,
+                              width: 300,
+                              height: 300,
+                              crop: 'center'
+                            -%}
+                          {%- endif -%}
+                        </a>
+                      {%- endfor -%}
+                    {%- else -%}
+                      <a href="{{ product.url }}" class="featured-collection__card-image-link active" data-image-slide="0">
+                        <div class="featured-collection__card-image-placeholder">
+                          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                            <circle cx="9" cy="9" r="2"></circle>
+                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                          </svg>
+                        </div>
+                      </a>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if media_count > 1 -%}
+                    <div class="featured-collection__card-dots" data-card-dots>
+                      {%- for i in (1..media_count) -%}
+                        <button
+                          class="featured-collection__card-dot {% if forloop.first %}active{% endif %}"
+                          data-slide="{{ forloop.index0 }}"
+                          aria-label="Go to image {{ forloop.index }}"
+                        ></button>
+                      {%- endfor -%}
+                    </div>
+                  {%- endif -%}
+                </div>
 
                 <div class="featured-collection__card-content">
                   <h3 class="featured-collection__card-title">
                     <a href="{{ product.url }}">{{ product.title }}</a>
                   </h3>
 
-                  <div class="featured-collection__card-rating">
-                    <div class="featured-collection__stars">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  {%- if section.settings.show_ratings -%}
+                    <div class="featured-collection__card-rating">
+                      <div class="featured-collection__stars">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                      </div>
+                      <span class="featured-collection__rating-count">(4.8)</span>
                     </div>
-                    <span class="featured-collection__rating-count">(4.8)</span>
-                  </div>
+                  {%- endif -%}
 
                   <p class="featured-collection__card-price">
                     {{ product.price | money }}
                   </p>
 
                   <a href="{{ product.url }}" class="featured-collection__card-button">
-                    <span class="featured-collection__button-text">{{ 'sections.featured_collection.view_product' | t }}</span>
+                    <span class="featured-collection__button-text">
+                      {%- if section.settings.cta_text != blank -%}
+                        {{ section.settings.cta_text }}
+                      {%- else -%}
+                        {{ 'sections.featured_collection.view_product' | t }}
+                      {%- endif -%}
+                    </span>
                     <svg class="featured-collection__button-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <circle cx="8" cy="21" r="1"></circle>
                       <circle cx="19" cy="21" r="1"></circle>
@@ -67,12 +115,40 @@
             {%- endfor -%}
           </div>
 
-          <div
-            class="featured-collection__dots"
-            data-carousel-dots
-            role="tablist"
-            aria-label="{{ 'sections.featured_collection.carousel_navigation' | t }}"
-          ></div>
+          <button
+            class="featured-collection__nav-button featured-collection__nav-button--prev"
+            data-carousel-prev
+            aria-label="Previous"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          </button>
+          <button
+            class="featured-collection__nav-button featured-collection__nav-button--next"
+            data-carousel-next
+            aria-label="Next"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="featured-collection__footer">
+          <a href="{{ routes.collections_url }}" class="featured-collection__view-all-button">
+            <span>
+              {%- if section.settings.view_all_text != blank -%}
+                {{ section.settings.view_all_text }}
+              {%- else -%}
+                {{ 'sections.featured_collection.view_all' | t }}
+              {%- endif -%}
+            </span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+          </a>
         </div>
       {%- else -%}
         <div class="featured-collection__empty">
@@ -124,8 +200,8 @@
   .featured-collection__carousel {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: calc(50% - 0.5rem);
-    gap: 1rem;
+    grid-auto-columns: calc(50% - 0.25rem);
+    gap: 0.5rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
@@ -159,33 +235,96 @@
   .featured-collection__card:nth-child(6) { animation-delay: 0.6s; }
 
   .featured-collection__card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .featured-collection__card-image-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-collection__card-images {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
   }
 
   .featured-collection__card-image-link {
     display: block;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
     overflow: hidden;
+  }
+
+  .featured-collection__card-image-link.active {
+    opacity: 1;
+  }
+
+  .featured-collection__card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  .featured-collection__card-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  .featured-collection__card-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+  }
+
+  .featured-collection__card-dot:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.2);
+  }
+
+  .featured-collection__card-dot.active {
+    background: white;
+    width: 20px;
+    border-radius: 3px;
   }
 
   .featured-collection__card-image {
     width: 100%;
     aspect-ratio: 1 / 1;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .featured-collection__card-image img {
     object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   .featured-collection__card:hover .featured-collection__card-image img {
-    transform: scale(1.08);
+    transform: scale(1.05);
   }
 
   .featured-collection__card-content {
-    padding: 1rem;
+    padding: 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -251,7 +390,7 @@
     text-align: center;
     border-radius: 9999px;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     transition: all 0.3s ease;
     margin-top: auto;
     position: relative;
@@ -287,46 +426,91 @@
     z-index: 1;
   }
 
-  .featured-collection__button-icon {
-    animation: cartShake 0.6s ease-in-out 3s infinite;
-  }
 
-  .featured-collection__card:hover .featured-collection__button-icon {
-    animation: cartBounce 0.6s ease-in-out infinite;
-  }
-
-  .featured-collection__dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1.5rem 0 0.5rem 0;
-  }
-
-  .featured-collection__dot {
-    width: 8px;
-    height: 8px;
+  .featured-collection__nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.2);
-    border: none;
-    padding: 0;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .featured-collection__nav-button:hover {
+    background: var(--color-foreground, #000);
+    border-color: var(--color-foreground, #000);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .featured-collection__nav-button:hover svg {
+    stroke: white;
+  }
+
+  .featured-collection__nav-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .featured-collection__nav-button:disabled:hover {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .featured-collection__nav-button:disabled:hover svg {
+    stroke: currentColor;
+  }
+
+  .featured-collection__nav-button--prev {
+    left: -20px;
+  }
+
+  .featured-collection__nav-button--next {
+    right: -20px;
+  }
+
+  .featured-collection__nav-button svg {
+    transition: stroke 0.3s ease;
+  }
+
+  .featured-collection__footer {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .featured-collection__view-all-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background: var(--color-foreground, #000);
+    color: var(--color-background, #fff);
+    text-decoration: none;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
   }
 
-  .featured-collection__dot:hover {
-    background: rgba(0, 0, 0, 0.4);
-    transform: scale(1.2);
+  .featured-collection__view-all-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   }
 
-  .featured-collection__dot:focus {
-    outline: 2px solid var(--color-foreground, #000);
-    outline-offset: 2px;
+  .featured-collection__view-all-button svg {
+    transition: transform 0.3s ease;
   }
 
-  .featured-collection__dot.is-active {
-    background: var(--color-foreground, #000);
-    width: 24px;
-    border-radius: 4px;
+  .featured-collection__view-all-button:hover svg {
+    transform: translateX(4px);
   }
 
   .featured-collection__empty {
@@ -358,6 +542,46 @@
     50% { transform: translateY(-3px); }
   }
 
+  @media (max-width: 767px) {
+    .featured-collection__container {
+      padding: 0;
+    }
+
+    .featured-collection__card-button {
+      font-size: 0.7rem;
+      padding: 0.5rem 0.875rem;
+      gap: 0.375rem;
+    }
+
+    .featured-collection__button-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .featured-collection__nav-button {
+      width: 32px;
+      height: 32px;
+    }
+
+    .featured-collection__nav-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .featured-collection__nav-button--prev {
+      left: 8px;
+    }
+
+    .featured-collection__nav-button--next {
+      right: 8px;
+    }
+
+    .featured-collection__view-all-button {
+      font-size: 0.875rem;
+      padding: 0.75rem 1.5rem;
+    }
+  }
+
   @media (min-width: 768px) {
     .featured-collection__carousel {
       grid-auto-columns: calc(25% - 0.75rem);
@@ -365,12 +589,16 @@
     }
 
     .featured-collection__card-content {
-      padding: 1.25rem;
-      gap: 0.625rem;
+      padding: 0.875rem;
+      gap: 0.5rem;
     }
 
     .featured-collection__card-title {
       font-size: 1rem;
+    }
+
+    .featured-collection__card-button {
+      font-size: 0.875rem;
     }
 
     .featured-collection__title {
@@ -396,134 +624,192 @@
       transition: none;
     }
 
-    .featured-collection__button-icon {
-      animation: none;
+    .featured-collection__card-image-link {
+      transition: none;
     }
 
-    .featured-collection__card:hover .featured-collection__button-icon {
-      animation: none;
+    .featured-collection__card-dot {
+      transition: none;
     }
 
-    .featured-collection__dot {
+    .featured-collection__nav-button {
+      transition: none;
+    }
+
+    .featured-collection__view-all-button {
+      transition: none;
+    }
+
+    .featured-collection__view-all-button svg {
       transition: none;
     }
   }
 {% endstylesheet %}
 
 {% javascript %}
-  class FeaturedCollectionCarousel {
-    constructor(wrapper) {
-      this.wrapper = wrapper;
-      this.carousel = wrapper.querySelector('.featured-collection__carousel');
-      this.dotsContainer = wrapper.querySelector('[data-carousel-dots]');
+  // Product Card Image Slideshow
+  class ProductCardGallery {
+    constructor(gallery) {
+      this.gallery = gallery;
+      this.imagesContainer = gallery.querySelector('[data-images-container]');
+      this.dotsContainer = gallery.querySelector('[data-card-dots]');
 
-      if (!this.carousel || !this.dotsContainer) return;
+      if (!this.imagesContainer) return;
 
-      this.cards = Array.from(this.carousel.querySelectorAll('.featured-collection__card'));
-      this.currentIndex = 0;
-      this.scrollTimeout = null;
-      this.resizeTimeout = null;
+      this.imageLinks = Array.from(this.imagesContainer.querySelectorAll('[data-image-slide]'));
+      this.dots = this.dotsContainer ? Array.from(this.dotsContainer.querySelectorAll('[data-slide]')) : [];
+      this.currentSlide = 0;
+      this.autoplayInterval = null;
+
+      if (this.imageLinks.length <= 1) return;
 
       this.init();
     }
 
     init() {
-      this.generateDots();
-      this.carousel.addEventListener('scroll', this.handleScroll.bind(this));
-
-      window.addEventListener('resize', () => {
-        clearTimeout(this.resizeTimeout);
-        this.resizeTimeout = setTimeout(() => {
-          this.generateDots();
-          this.updateActiveDot();
-        }, 150);
-      });
-
-      this.updateActiveDot();
-    }
-
-    generateDots() {
-      const cardsCount = this.cards.length;
-      const visibleCards = this.getVisibleCardsCount();
-      const dotsCount = Math.max(1, Math.ceil(cardsCount / visibleCards));
-
-      this.dotsContainer.innerHTML = '';
-
-      for (let i = 0; i < dotsCount; i++) {
-        const dot = document.createElement('button');
-        dot.className = 'featured-collection__dot';
-        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-        dot.setAttribute('role', 'tab');
-        dot.dataset.index = i;
-
-        dot.addEventListener('click', () => {
-          this.scrollToIndex(i);
-        });
-
-        this.dotsContainer.appendChild(dot);
-      }
-
-      this.dots = Array.from(this.dotsContainer.querySelectorAll('.featured-collection__dot'));
-    }
-
-    getVisibleCardsCount() {
-      const carouselWidth = this.carousel.offsetWidth;
-      const firstCard = this.cards[0];
-      if (!firstCard) return 1;
-
-      const cardStyle = window.getComputedStyle(firstCard);
-      const cardWidth = firstCard.offsetWidth + parseFloat(cardStyle.marginRight || 0);
-
-      return Math.floor(carouselWidth / cardWidth) || 1;
-    }
-
-    handleScroll() {
-      if (this.scrollTimeout) {
-        clearTimeout(this.scrollTimeout);
-      }
-
-      this.scrollTimeout = setTimeout(() => {
-        this.updateActiveDot();
-      }, 100);
-    }
-
-    updateActiveDot() {
-      if (!this.dots || this.dots.length === 0) return;
-
-      const scrollLeft = this.carousel.scrollLeft;
-      const carouselWidth = this.carousel.offsetWidth;
-      const scrollWidth = this.carousel.scrollWidth;
-
-      const scrollPercentage = scrollLeft / (scrollWidth - carouselWidth);
-      const activeDotIndex = Math.min(
-        Math.round(scrollPercentage * (this.dots.length - 1)),
-        this.dots.length - 1
-      );
-
+      // Handle dot clicks
       this.dots.forEach((dot, index) => {
-        if (index === activeDotIndex) {
-          dot.classList.add('is-active');
-          dot.setAttribute('aria-selected', 'true');
-        } else {
-          dot.classList.remove('is-active');
-          dot.setAttribute('aria-selected', 'false');
-        }
+        dot.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.stopAutoplay();
+          this.goToSlide(index);
+        });
       });
 
-      this.currentIndex = activeDotIndex;
+      // Handle hover auto-play
+      this.gallery.addEventListener('mouseenter', () => {
+        this.startAutoplay();
+      });
+
+      this.gallery.addEventListener('mouseleave', () => {
+        this.stopAutoplay();
+        this.goToSlide(0); // Reset to first image
+      });
     }
 
-    scrollToIndex(index) {
-      const visibleCards = this.getVisibleCardsCount();
-      const targetCardIndex = index * visibleCards;
-      const targetCard = this.cards[targetCardIndex];
+    goToSlide(index) {
+      // Remove active class from current slide and dot
+      if (this.imageLinks[this.currentSlide]) {
+        this.imageLinks[this.currentSlide].classList.remove('active');
+      }
+      if (this.dots[this.currentSlide]) {
+        this.dots[this.currentSlide].classList.remove('active');
+      }
 
-      if (targetCard) {
-        targetCard.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'start'
-        });
+      // Update current slide index
+      this.currentSlide = index;
+
+      // Add active class to new slide and dot
+      if (this.imageLinks[this.currentSlide]) {
+        this.imageLinks[this.currentSlide].classList.add('active');
+      }
+      if (this.dots[this.currentSlide]) {
+        this.dots[this.currentSlide].classList.add('active');
+      }
+    }
+
+    startAutoplay() {
+      if (this.autoplayInterval) return;
+      this.autoplayInterval = setInterval(() => {
+        const nextSlide = (this.currentSlide + 1) % this.imageLinks.length;
+        this.goToSlide(nextSlide);
+      }, 2000);
+    }
+
+    stopAutoplay() {
+      if (this.autoplayInterval) {
+        clearInterval(this.autoplayInterval);
+        this.autoplayInterval = null;
+      }
+    }
+  }
+
+  function initProductCardGalleries() {
+    const galleries = document.querySelectorAll('[data-product-card-gallery]');
+    galleries.forEach(gallery => {
+      if (!gallery.dataset.initialized) {
+        new ProductCardGallery(gallery);
+        gallery.dataset.initialized = 'true';
+      }
+    });
+  }
+
+  // Main Carousel Navigation with Chevrons
+  class FeaturedCollectionCarousel {
+    constructor(wrapper) {
+      this.wrapper = wrapper;
+      this.carousel = wrapper.querySelector('.featured-collection__carousel');
+      this.prevButton = wrapper.querySelector('[data-carousel-prev]');
+      this.nextButton = wrapper.querySelector('[data-carousel-next]');
+
+      if (!this.carousel) return;
+
+      this.cards = Array.from(this.carousel.querySelectorAll('.featured-collection__card'));
+      this.scrollTimeout = null;
+
+      this.init();
+    }
+
+    init() {
+      // Handle button clicks
+      if (this.prevButton) {
+        this.prevButton.addEventListener('click', () => this.scrollPrev());
+      }
+      if (this.nextButton) {
+        this.nextButton.addEventListener('click', () => this.scrollNext());
+      }
+
+      // Update button states on scroll
+      this.carousel.addEventListener('scroll', () => {
+        if (this.scrollTimeout) {
+          clearTimeout(this.scrollTimeout);
+        }
+        this.scrollTimeout = setTimeout(() => {
+          this.updateButtonStates();
+        }, 100);
+      });
+
+      // Initial button state
+      this.updateButtonStates();
+    }
+
+    scrollPrev() {
+      const scrollAmount = this.carousel.offsetWidth;
+      this.carousel.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+
+    scrollNext() {
+      const scrollAmount = this.carousel.offsetWidth;
+      this.carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+
+    updateButtonStates() {
+      const scrollLeft = this.carousel.scrollLeft;
+      const maxScroll = this.carousel.scrollWidth - this.carousel.offsetWidth;
+
+      // Update prev button
+      if (this.prevButton) {
+        if (scrollLeft <= 0) {
+          this.prevButton.disabled = true;
+        } else {
+          this.prevButton.disabled = false;
+        }
+      }
+
+      // Update next button
+      if (this.nextButton) {
+        if (scrollLeft >= maxScroll - 1) {
+          this.nextButton.disabled = true;
+        } else {
+          this.nextButton.disabled = false;
+        }
       }
     }
   }
@@ -535,16 +821,21 @@
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFeaturedCollectionCarousels);
-  } else {
+  function initAll() {
+    initProductCardGalleries();
     initFeaturedCollectionCarousels();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
   }
 
   if (Shopify && Shopify.designMode) {
     document.addEventListener('shopify:section:load', function(event) {
       if (event.target.querySelector('[data-featured-collection-carousel]')) {
-        initFeaturedCollectionCarousels();
+        initAll();
       }
     });
   }
@@ -562,6 +853,30 @@
       "type": "collection",
       "id": "collection",
       "label": "t:labels.collection"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "t:labels.cta_text",
+      "default": "View product",
+      "info": "t:labels.cta_text_info"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "t:labels.view_all_text",
+      "default": "View all products",
+      "info": "t:labels.view_all_text_info"
+    },
+    {
+      "type": "header",
+      "content": "t:general.display_options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ratings",
+      "label": "t:labels.show_ratings",
+      "default": true
     }
   ],
   "presets": [
