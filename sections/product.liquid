@@ -56,18 +56,6 @@
 
       {%- comment -%} Right Side - Product Info {%- endcomment -%}
       <div class="product-page__info">
-        {%- comment -%} Top Blocks {%- endcomment -%}
-        {%- assign top_blocks = section.blocks | where: "type", "top" -%}
-        {%- if top_blocks.size > 0 -%}
-          <div class="product-page__blocks-top">
-            {%- for block in top_blocks -%}
-              <div {{ block.shopify_attributes }}>
-                {{ block.settings.content }}
-              </div>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-
         {%- comment -%} Main Product Info {%- endcomment -%}
         <div class="product-page__main">
           <h1 class="product-page__title">{{ product.title }}</h1>
@@ -81,16 +69,36 @@
             {%- endif -%}
           </div>
 
+          {%- comment -%} Top Blocks - Above Description {%- endcomment -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == "top" -%}
+              <div class="product-page__blocks-top" {{ block.shopify_attributes }}>
+                {% content_for 'blocks', parent: block %}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
           {%- if product.description != blank -%}
             <div class="product-page__description">
               {{ product.description }}
             </div>
           {%- endif -%}
 
+          {%- comment -%} Bottom Blocks - Below Description {%- endcomment -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == "bottom" -%}
+              <div class="product-page__blocks-bottom" {{ block.shopify_attributes }}>
+                {% content_for 'blocks', parent: block %}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
           {%- comment -%} Product Form {%- endcomment -%}
           <div class="product-page__form">
             {% form 'product', product, class: 'product-form' %}
-              {%- if product.has_only_default_variant == false -%}
+              {%- if product.has_only_default_variant -%}
+                <input type="hidden" name="id" value="{{ current_variant.id }}">
+              {%- else -%}
                 <div class="product-form__variants">
                   <label for="variant-select" class="product-form__label">
                     {{ 'products.variant' | t }}
@@ -153,18 +161,6 @@
           </div>
         </div>
 
-        {%- comment -%} Bottom Blocks {%- endcomment -%}
-        {%- assign bottom_blocks = section.blocks | where: "type", "bottom" -%}
-        {%- if bottom_blocks.size > 0 -%}
-          <div class="product-page__blocks-bottom">
-            {%- for block in bottom_blocks -%}
-              <div {{ block.shopify_attributes }}>
-                {{ block.settings.content }}
-              </div>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-
         {%- comment -%} App Blocks {%- endcomment -%}
         {%- assign app_blocks = section.blocks | where: "type", "@app" -%}
         {%- if app_blocks.size > 0 -%}
@@ -190,7 +186,7 @@
   .product-page__container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0;
   }
 
   .product-page__layout {
@@ -524,7 +520,7 @@
     }
 
     .product-page__container {
-      padding: 0 1rem;
+      padding: 0;
     }
 
     .product-page__layout {
@@ -663,26 +659,46 @@
     {
       "type": "top",
       "name": "t:general.top_block",
-      "limit": 10,
+      "limit": 1,
+      "blocks": [
+        {
+          "type": "@theme"
+        },
+        {
+          "type": "@app"
+        }
+      ],
       "settings": [
         {
-          "type": "richtext",
-          "id": "content",
-          "label": "t:labels.content",
-          "default": "<p>Add custom content here</p>"
+          "type": "header",
+          "content": "t:general.content"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:labels.top_block_description"
         }
       ]
     },
     {
       "type": "bottom",
       "name": "t:general.bottom_block",
-      "limit": 10,
+      "limit": 1,
+      "blocks": [
+        {
+          "type": "@theme"
+        },
+        {
+          "type": "@app"
+        }
+      ],
       "settings": [
         {
-          "type": "richtext",
-          "id": "content",
-          "label": "t:labels.content",
-          "default": "<p>Add custom content here</p>"
+          "type": "header",
+          "content": "t:general.content"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:labels.bottom_block_description"
         }
       ]
     },

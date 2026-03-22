@@ -61,6 +61,7 @@
     "background": "Background",
     "background_color": "Background color",
     "body": "Body",
+    "bottom_block_description": "Add blocks to appear below the product description",
     "collection": "Collection",
     "content": "Content",
     "cta_text": "Button text",
@@ -109,6 +110,7 @@
     "text_style": "Text style",
     "text": "Text",
     "title": "Title",
+    "top_block_description": "Add blocks to appear above the product description",
     "view_all_text": "View all button text",
     "view_all_text_info": "Text shown on the view all products button"
   },
