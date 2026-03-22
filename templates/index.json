@@ -89,7 +89,7 @@
       "type": "featured-collection",
       "name": "t:general.featured_collection",
       "settings": {
-        "collection": "collection-2"
+        "collection": "main-collection"
       }
     }
   },
