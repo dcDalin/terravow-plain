@@ -74,7 +74,9 @@
           {%- if top_blocks.size > 0 -%}
             <div class="product-page__blocks-top">
               {%- for block in top_blocks -%}
-                {% content_for 'block', type: block.type, id: block.id %}
+                <div {{ block.shopify_attributes }}>
+                  {% render block %}
+                </div>
               {%- endfor -%}
             </div>
           {%- endif -%}
@@ -90,7 +92,9 @@
           {%- if bottom_blocks.size > 0 -%}
             <div class="product-page__blocks-bottom">
               {%- for block in bottom_blocks -%}
-                {% content_for 'block', type: block.type, id: block.id %}
+                <div {{ block.shopify_attributes }}>
+                  {% render block %}
+                </div>
               {%- endfor -%}
             </div>
           {%- endif -%}
@@ -659,7 +663,31 @@
   "name": "t:general.product",
   "blocks": [
     {
-      "type": "@theme",
+      "type": "information-marquee",
+      "name": "t:general.information_marquee",
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "t:labels.position",
+          "options": [
+            {
+              "value": "top",
+              "label": "t:options.position.top"
+            },
+            {
+              "value": "bottom",
+              "label": "t:options.position.bottom"
+            }
+          ],
+          "default": "top",
+          "info": "t:labels.position_info"
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "t:general.group",
       "settings": [
         {
           "type": "select",
