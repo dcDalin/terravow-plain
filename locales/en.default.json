@@ -135,6 +135,30 @@
       "view_all": "View all products",
       "no_products": "No products in this collection",
       "carousel_navigation": "Carousel navigation"
+    },
+    "collection": {
+      "search_placeholder": "Search products...",
+      "sort_by": "Sort by",
+      "filters": "Filters",
+      "active_filters": "Active Filters",
+      "clear_all": "Clear all",
+      "availability": "Availability",
+      "in_stock": "In stock",
+      "out_of_stock": "Out of stock",
+      "tags": "Tags",
+      "showing_count": "Showing {{count}} products",
+      "no_products": "No products found",
+      "reset_filters": "Reset filters",
+      "sort": {
+        "featured": "Featured",
+        "best_selling": "Best selling",
+        "title_asc": "Alphabetically, A-Z",
+        "title_desc": "Alphabetically, Z-A",
+        "price_asc": "Price, low to high",
+        "price_desc": "Price, high to low",
+        "date_asc": "Date, old to new",
+        "date_desc": "Date, new to old"
+      }
     }
   }
 }
