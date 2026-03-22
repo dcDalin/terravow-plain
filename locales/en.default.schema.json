@@ -48,6 +48,8 @@
     "style": "Style",
     "text": "Text",
     "theme": "Theme",
+    "top_block": "Top block",
+    "bottom_block": "Bottom block",
     "typography": "Typography"
   },
   "labels": {
@@ -60,6 +62,7 @@
     "background_color": "Background color",
     "body": "Body",
     "collection": "Collection",
+    "content": "Content",
     "cta_text": "Button text",
     "cta_text_info": "Text shown on the product view button",
     "direction": "Direction",
