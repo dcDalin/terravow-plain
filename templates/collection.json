@@ -11,52 +11,17 @@
   "sections": {
     "custom_section_bHRKyD": {
       "type": "custom-section",
-      "blocks": {
-        "information_marquee_67hR7A": {
-          "type": "information-marquee",
-          "name": "t:general.information_marquee",
-          "settings": {
-            "title": "",
-            "marquee_speed": 30,
-            "size": "small",
-            "spacing_top": 36,
-            "spacing_bottom": 36,
-            "spacing_sides": 0,
-            "item_spacing": 12,
-            "background_color": "#ffffff",
-            "text_color": "#1f2937",
-            "hover_background_color": "#1f2937",
-            "hover_text_color": "#ffffff",
-            "active_background_color": "#000000",
-            "active_text_color": "#ffffff",
-            "item_1_title": "Free Shipping",
-            "item_1_subtitle": "Fast & Free Delivery",
-            "item_1_body": "<p>Enjoy free shipping on all orders over $50. We deliver worldwide with tracking.</p>",
-            "item_2_title": "30-Day Returns",
-            "item_2_subtitle": "Hassle-Free Returns",
-            "item_2_body": "<p>Not satisfied? Return your purchase within 30 days for a full refund.</p>",
-            "item_3_title": "Premium Quality",
-            "item_3_subtitle": "High-Quality Materials",
-            "item_3_body": "<p>Crafted from the finest materials with attention to every detail.</p>",
-            "item_4_title": "Secure Payment",
-            "item_4_subtitle": "Safe & Secure Checkout",
-            "item_4_body": "<p>Your payment information is encrypted and secure with our trusted payment partners.</p>",
-            "item_5_title": "Customer Support",
-            "item_5_subtitle": "24/7 Support Available",
-            "item_5_body": "<p>Our dedicated support team is always here to help you with any questions.</p>"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "information_marquee_67hR7A"
-      ],
       "name": "t:general.custom_section",
       "settings": {}
     },
     "main": {
       "type": "collection",
-      "settings": {}
+      "settings": {
+        "products_per_page": 20,
+        "show_search": true,
+        "show_ratings": true,
+        "cta_text": "View product"
+      }
     }
   },
   "order": [
