@@ -24,25 +24,25 @@
   "
 >
   <div class="marquee-section__wrapper">
-    <div class="marquee-section__content">
-      {%- for i in (1..2) -%}
-        <div class="marquee-section__items" {% if i > 1 %}aria-hidden="true"{% endif %}>
-          {%- for block in section.blocks -%}
-            <div class="marquee-section__item" {% if i == 1 %}{{ block.shopify_attributes }}{% endif %}>
-              {%- if block.settings.icon != blank -%}
-                <span class="marquee-section__icon">{{ block.settings.icon }}</span>
-              {%- endif -%}
-              {%- if block.settings.text != blank -%}
-                <span class="marquee-section__text">{{ block.settings.text }}</span>
-              {%- endif -%}
-            </div>
+    {%- for i in (1..4) -%}
+      <div class="marquee-section__content" {% if i > 1 %}aria-hidden="true"{% endif %}>
+        {%- for block in section.blocks -%}
+          <div class="marquee-section__item" {% if i == 1 %}{{ block.shopify_attributes }}{% endif %}>
+            {%- if block.settings.icon != blank -%}
+              <span class="marquee-section__icon">{{ block.settings.icon }}</span>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <span class="marquee-section__text">{{ block.settings.text }}</span>
+            {%- endif -%}
+          </div>
+          {%- unless forloop.last and separator == blank -%}
             {%- if separator != blank -%}
               <span class="marquee-section__separator">{{ separator }}</span>
             {%- endif -%}
-          {%- endfor -%}
-        </div>
-      {%- endfor -%}
-    </div>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
   </div>
 </div>
 
@@ -58,28 +58,24 @@
   .marquee-section__wrapper {
     display: flex;
     gap: var(--marquee-gap);
-    width: fit-content;
+    width: max-content;
     white-space: nowrap;
+    will-change: transform;
   }
 
   .marquee-section__content {
-    min-width: max-content;
-    display: flex;
-    gap: var(--marquee-gap);
-  }
-
-  .marquee-section__items {
-    min-width: max-content;
     display: flex;
     gap: var(--marquee-gap);
     align-items: center;
     font-size: var(--marquee-font-size);
+    flex-shrink: 0;
   }
 
   .marquee-section__item {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
+    flex-shrink: 0;
   }
 
   .marquee-section__icon {
@@ -112,7 +108,7 @@
       transform: translate3d(0, 0, 0);
     }
     100% {
-      transform: translate3d(-50%, 0, 0);
+      transform: translate3d(-25%, 0, 0);
     }
   }
 

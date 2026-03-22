@@ -69,8 +69,8 @@
 
 <div class="information-marquee__container">
     <div class="information-marquee__track" data-marquee-track>
-      {% for i in (1..2) %}
-        <div class="information-marquee__content">
+      {% for i in (1..4) %}
+        <div class="information-marquee__content" {% if i > 1 %}aria-hidden="true"{% endif %}>
           {% for item in (1..10) %}
             {% liquid
               assign item_title_key = 'item_' | append: item | append: '_title'
@@ -174,9 +174,10 @@
 
   .information-marquee__track {
     display: flex;
-    width: fit-content;
+    width: max-content;
     gap: var(--info-marquee-item-spacing);
     animation: marquee-scroll var(--marquee-speed, 20s) linear infinite;
+    will-change: transform;
   }
 
   .information-marquee__track[data-paused='true'] {
@@ -302,10 +303,10 @@
 
 @keyframes marquee-scroll {
     0% {
-      transform: translateX(0);
+      transform: translate3d(0, 0, 0);
     }
     100% {
-      transform: translateX(-50%);
+      transform: translate3d(-25%, 0, 0);
     }
   }
 
