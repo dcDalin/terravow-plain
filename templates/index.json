@@ -9,6 +9,16 @@
  */
 {
   "sections": {
+    "featured_collection_G3WEVP": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
+      "settings": {
+        "collection": "main-collection",
+        "cta_text": "View product",
+        "view_all_text": "View all products",
+        "show_ratings": true
+      }
+    },
     "custom_section_AWwyrf": {
       "type": "custom-section",
       "blocks": {
@@ -84,19 +94,12 @@
         "spacing_top": 80,
         "spacing_bottom": 80
       }
-    },
-    "featured_collection_G3WEVP": {
-      "type": "featured-collection",
-      "name": "t:general.featured_collection",
-      "settings": {
-        "collection": "main-collection"
-      }
     }
   },
   "order": [
+    "featured_collection_G3WEVP",
     "custom_section_AWwyrf",
     "main",
-    "contact_form_E6aFxj",
-    "featured_collection_G3WEVP"
+    "contact_form_E6aFxj"
   ]
 }
