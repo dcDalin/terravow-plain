@@ -78,16 +78,25 @@
       "name": "t:general.contact_form",
       "settings": {
         "title": "Contact us",
+        "title_alignment": "center",
         "max_width": 600,
         "input_corner_radius": 30,
         "spacing_top": 80,
         "spacing_bottom": 80
+      }
+    },
+    "featured_collection_G3WEVP": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
+      "settings": {
+        "collection": "collection-2"
       }
     }
   },
   "order": [
     "custom_section_AWwyrf",
     "main",
-    "contact_form_E6aFxj"
+    "contact_form_E6aFxj",
+    "featured_collection_G3WEVP"
   ]
 }
