@@ -1,32 +1,463 @@
+{%- liquid
+  assign selected_collection = section.settings.collection | default: collections.first
+  assign min_price = nil
+  assign max_price = nil
+
+  if selected_collection and selected_collection.products_count > 0
+    for product in selected_collection.products
+      for variant in product.variants
+        if min_price == nil or variant.price < min_price
+          assign min_price = variant.price
+        endif
+        if max_price == nil or variant.price > max_price
+          assign max_price = variant.price
+        endif
+      endfor
+    endfor
+  endif
+-%}
+
 <div class="featured-collection full-width">
   <div class="featured-collection__container">
-    <h1 class="featured-collection__title">Featured Collection</h1>
+    {%- if selected_collection -%}
+      <div class="featured-collection__header">
+        <h2 class="featured-collection__title">{{ selected_collection.title }}</h2>
+        {%- if selected_collection.description != blank -%}
+          <div class="featured-collection__description">
+            {{ selected_collection.description }}
+          </div>
+        {%- endif -%}
+        {%- if min_price and max_price -%}
+          <div class="featured-collection__price-range">
+            {{ 'sections.featured_collection.price_from' | t }}
+            {%- if min_price == max_price -%}
+              {{ min_price | money }}
+            {%- else -%}
+              {{ min_price | money }} - {{ max_price | money }}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if selected_collection.products_count > 0 -%}
+        <div
+          class="featured-collection__carousel-wrapper"
+          data-featured-collection-carousel
+        >
+          <div class="featured-collection__carousel">
+            {%- for product in selected_collection.products limit: 12 -%}
+              <div class="featured-collection__card">
+                {%- if product.featured_image -%}
+                  {%- render 'image',
+                    class: 'featured-collection__card-image',
+                    image: product.featured_image,
+                    url: product.url,
+                    width: 400,
+                    height: 400,
+                    crop: 'center'
+                  -%}
+                {%- endif -%}
+
+                <div class="featured-collection__card-content">
+                  <h3 class="featured-collection__card-title">
+                    <a href="{{ product.url }}">{{ product.title }}</a>
+                  </h3>
+                  <p class="featured-collection__card-price">
+                    {{ product.price | money }}
+                  </p>
+                  <a
+                    href="{{ product.url }}"
+                    class="featured-collection__card-button"
+                  >
+                    {{ 'sections.featured_collection.view_product' | t }}
+                  </a>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          <div
+            class="featured-collection__dots"
+            data-carousel-dots
+            role="tablist"
+            aria-label="{{ 'sections.featured_collection.carousel_navigation' | t }}"
+          ></div>
+        </div>
+      {%- else -%}
+        <div class="featured-collection__empty">
+          <p>{{ 'sections.featured_collection.no_products' | t }}</p>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
   </div>
 </div>
 
 {% stylesheet %}
   .featured-collection {
     width: 100%;
-    padding: 4rem 1rem;
+    padding: 4rem 0;
   }
 
   .featured-collection__container {
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+  }
+
+  .featured-collection__header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 1rem;
   }
 
   .featured-collection__title {
-    text-align: center;
     font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+  }
+
+  .featured-collection__description {
+    font-size: 1.125rem;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 0 0 1rem 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .featured-collection__price-range {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .featured-collection__carousel-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .featured-collection__carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc(100% - 2rem);
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 0 1rem 2rem 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .featured-collection__carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .featured-collection__card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .featured-collection__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .featured-collection__card-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .featured-collection__card-image img {
+    object-fit: cover;
+  }
+
+  .featured-collection__card-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .featured-collection__card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .featured-collection__card-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .featured-collection__card-title a:hover {
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .featured-collection__card-price {
+    font-size: 1.25rem;
     font-weight: 700;
     margin: 0;
   }
+
+  .featured-collection__card-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-foreground, #000);
+    color: var(--color-background, #fff);
+    text-decoration: none;
+    text-align: center;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+    margin-top: auto;
+  }
+
+  .featured-collection__card-button:hover {
+    opacity: 0.9;
+  }
+
+  .featured-collection__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 0 0.5rem 0;
+  }
+
+  .featured-collection__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .featured-collection__dot:hover {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .featured-collection__dot:focus {
+    outline: 2px solid var(--color-foreground, #000);
+    outline-offset: 2px;
+  }
+
+  .featured-collection__dot.is-active {
+    background: var(--color-foreground, #000);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  .featured-collection__empty {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 1.125rem;
+  }
+
+  @media (min-width: 640px) {
+    .featured-collection__carousel {
+      grid-auto-columns: calc(50% - 0.75rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .featured-collection__carousel {
+      grid-auto-columns: calc(33.333% - 1rem);
+      padding: 0 2rem 2rem 2rem;
+    }
+
+    .featured-collection__header {
+      padding: 0 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .featured-collection__carousel {
+      grid-auto-columns: calc(25% - 1.125rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .featured-collection__carousel {
+      scroll-behavior: auto;
+    }
+
+    .featured-collection__card {
+      transition: none;
+    }
+
+    .featured-collection__dot {
+      transition: none;
+    }
+  }
 {% endstylesheet %}
+
+{% javascript %}
+  class FeaturedCollectionCarousel {
+    constructor(wrapper) {
+      this.wrapper = wrapper;
+      this.carousel = wrapper.querySelector('.featured-collection__carousel');
+      this.dotsContainer = wrapper.querySelector('[data-carousel-dots]');
+
+      if (!this.carousel || !this.dotsContainer) return;
+
+      this.cards = Array.from(this.carousel.querySelectorAll('.featured-collection__card'));
+      this.currentIndex = 0;
+      this.scrollTimeout = null;
+      this.resizeTimeout = null;
+
+      this.init();
+    }
+
+    init() {
+      this.generateDots();
+      this.carousel.addEventListener('scroll', this.handleScroll.bind(this));
+
+      window.addEventListener('resize', () => {
+        clearTimeout(this.resizeTimeout);
+        this.resizeTimeout = setTimeout(() => {
+          this.generateDots();
+          this.updateActiveDot();
+        }, 150);
+      });
+
+      this.updateActiveDot();
+    }
+
+    generateDots() {
+      const cardsCount = this.cards.length;
+      const visibleCards = this.getVisibleCardsCount();
+      const dotsCount = Math.max(1, Math.ceil(cardsCount / visibleCards));
+
+      this.dotsContainer.innerHTML = '';
+
+      for (let i = 0; i < dotsCount; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'featured-collection__dot';
+        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.setAttribute('role', 'tab');
+        dot.dataset.index = i;
+
+        dot.addEventListener('click', () => {
+          this.scrollToIndex(i);
+        });
+
+        this.dotsContainer.appendChild(dot);
+      }
+
+      this.dots = Array.from(this.dotsContainer.querySelectorAll('.featured-collection__dot'));
+    }
+
+    getVisibleCardsCount() {
+      const carouselWidth = this.carousel.offsetWidth;
+      const firstCard = this.cards[0];
+      if (!firstCard) return 1;
+
+      const cardStyle = window.getComputedStyle(firstCard);
+      const cardWidth = firstCard.offsetWidth + parseFloat(cardStyle.marginRight || 0);
+
+      return Math.floor(carouselWidth / cardWidth) || 1;
+    }
+
+    handleScroll() {
+      if (this.scrollTimeout) {
+        clearTimeout(this.scrollTimeout);
+      }
+
+      this.scrollTimeout = setTimeout(() => {
+        this.updateActiveDot();
+      }, 100);
+    }
+
+    updateActiveDot() {
+      if (!this.dots || this.dots.length === 0) return;
+
+      const scrollLeft = this.carousel.scrollLeft;
+      const carouselWidth = this.carousel.offsetWidth;
+      const scrollWidth = this.carousel.scrollWidth;
+
+      const scrollPercentage = scrollLeft / (scrollWidth - carouselWidth);
+      const activeDotIndex = Math.min(
+        Math.round(scrollPercentage * (this.dots.length - 1)),
+        this.dots.length - 1
+      );
+
+      this.dots.forEach((dot, index) => {
+        if (index === activeDotIndex) {
+          dot.classList.add('is-active');
+          dot.setAttribute('aria-selected', 'true');
+        } else {
+          dot.classList.remove('is-active');
+          dot.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      this.currentIndex = activeDotIndex;
+    }
+
+    scrollToIndex(index) {
+      const visibleCards = this.getVisibleCardsCount();
+      const targetCardIndex = index * visibleCards;
+      const targetCard = this.cards[targetCardIndex];
+
+      if (targetCard) {
+        targetCard.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'start'
+        });
+      }
+    }
+  }
+
+  function initFeaturedCollectionCarousels() {
+    const carousels = document.querySelectorAll('[data-featured-collection-carousel]');
+    carousels.forEach(carousel => {
+      new FeaturedCollectionCarousel(carousel);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFeaturedCollectionCarousels);
+  } else {
+    initFeaturedCollectionCarousels();
+  }
+
+  if (Shopify && Shopify.designMode) {
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.target.querySelector('[data-featured-collection-carousel]')) {
+        initFeaturedCollectionCarousels();
+      }
+    });
+  }
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "t:general.featured_collection",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:labels.collection"
+    }
+  ],
   "presets": [
     {
       "name": "t:general.featured_collection",
