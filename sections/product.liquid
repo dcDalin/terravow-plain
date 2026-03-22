@@ -73,7 +73,7 @@
           {%- for block in section.blocks -%}
             {%- if block.type == "top" -%}
               <div class="product-page__blocks-top" {{ block.shopify_attributes }}>
-                {% content_for 'blocks', parent: block %}
+                {% content_for 'blocks' %}
               </div>
             {%- endif -%}
           {%- endfor -%}
@@ -88,7 +88,7 @@
           {%- for block in section.blocks -%}
             {%- if block.type == "bottom" -%}
               <div class="product-page__blocks-bottom" {{ block.shopify_attributes }}>
-                {% content_for 'blocks', parent: block %}
+                {% content_for 'blocks' %}
               </div>
             {%- endif -%}
           {%- endfor -%}
