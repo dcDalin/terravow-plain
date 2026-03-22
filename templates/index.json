@@ -24,7 +24,7 @@
       "name": "t:general.contact_form",
       "settings": {
         "title": "Contact us",
-        "title_alignment": "center",
+        "title_alignment": "left",
         "max_width": 600,
         "input_corner_radius": 30,
         "spacing_top": 80,
