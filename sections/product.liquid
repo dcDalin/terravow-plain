@@ -70,13 +70,26 @@
           </div>
 
           {%- comment -%} Top Blocks - Above Description {%- endcomment -%}
-          {%- assign top_blocks = section.blocks | where: "settings.position", "top" -%}
-          {%- if top_blocks.size > 0 -%}
+          {%- assign has_top_blocks = false -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign position = block.settings.position | default: 'top'
+            -%}
+            {%- if position == "top" -%}
+              {%- assign has_top_blocks = true -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if has_top_blocks -%}
             <div class="product-page__blocks-top">
-              {%- for block in top_blocks -%}
-                <div {{ block.shopify_attributes }}>
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign position = block.settings.position | default: 'top'
+                -%}
+                {%- if position == "top" -%}
                   {% render block %}
-                </div>
+                {%- endif -%}
               {%- endfor -%}
             </div>
           {%- endif -%}
@@ -88,13 +101,26 @@
           {%- endif -%}
 
           {%- comment -%} Bottom Blocks - Below Description {%- endcomment -%}
-          {%- assign bottom_blocks = section.blocks | where: "settings.position", "bottom" -%}
-          {%- if bottom_blocks.size > 0 -%}
+          {%- assign has_bottom_blocks = false -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign position = block.settings.position | default: 'top'
+            -%}
+            {%- if position == "bottom" -%}
+              {%- assign has_bottom_blocks = true -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if has_bottom_blocks -%}
             <div class="product-page__blocks-bottom">
-              {%- for block in bottom_blocks -%}
-                <div {{ block.shopify_attributes }}>
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign position = block.settings.position | default: 'top'
+                -%}
+                {%- if position == "bottom" -%}
                   {% render block %}
-                </div>
+                {%- endif -%}
               {%- endfor -%}
             </div>
           {%- endif -%}
@@ -186,20 +212,27 @@
 {% stylesheet %}
   .product-page {
     width: 100%;
-    padding: 3rem 0;
+    padding: 3rem 1rem;
   }
 
   .product-page__container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 2rem;
   }
 
   .product-page__layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    gap: 4rem;
     align-items: start;
+  }
+
+  @media (min-width: 1440px) {
+    .product-page__layout {
+      grid-template-columns: minmax(0, 600px) minmax(0, 600px);
+      justify-content: center;
+    }
   }
 
   /* Media Section */
@@ -318,6 +351,12 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .product-page__blocks-top:empty,
+  .product-page__blocks-bottom:empty,
+  .product-page__blocks-app:empty {
+    display: none;
   }
 
   .product-page__main {
@@ -519,14 +558,25 @@
     height: 20px;
   }
 
+  /* Tablet Responsive */
+  @media (max-width: 1024px) {
+    .product-page__container {
+      padding: 0 1.5rem;
+    }
+
+    .product-page__layout {
+      gap: 3rem;
+    }
+  }
+
   /* Mobile Responsive */
   @media (max-width: 767px) {
     .product-page {
-      padding: 2rem 0;
+      padding: 1.5rem 0;
     }
 
     .product-page__container {
-      padding: 0;
+      padding: 0 1rem;
     }
 
     .product-page__layout {
@@ -536,6 +586,15 @@
 
     .product-page__media {
       position: static;
+    }
+
+    .product-page__media-gallery {
+      border-radius: 0.75rem;
+    }
+
+    .product-page__thumbnails {
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 0.5rem;
     }
 
     .product-page__title {
@@ -552,6 +611,14 @@
 
     .product-page__description {
       font-size: 0.9rem;
+    }
+
+    .product-page__info {
+      gap: 1.5rem;
+    }
+
+    .product-page__main {
+      gap: 1.25rem;
     }
 
     .product-form__submit {
