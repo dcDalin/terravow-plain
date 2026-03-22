@@ -70,13 +70,14 @@
           </div>
 
           {%- comment -%} Top Blocks - Above Description {%- endcomment -%}
-          {%- for block in section.blocks -%}
-            {%- if block.type == "top" -%}
-              <div class="product-page__blocks-top" {{ block.shopify_attributes }}>
-                {% content_for 'blocks' %}
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
+          {%- assign top_blocks = section.blocks | where: "settings.position", "top" -%}
+          {%- if top_blocks.size > 0 -%}
+            <div class="product-page__blocks-top">
+              {%- for block in top_blocks -%}
+                {% content_for 'block', type: block.type, id: block.id %}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
 
           {%- if product.description != blank -%}
             <div class="product-page__description">
@@ -85,13 +86,14 @@
           {%- endif -%}
 
           {%- comment -%} Bottom Blocks - Below Description {%- endcomment -%}
-          {%- for block in section.blocks -%}
-            {%- if block.type == "bottom" -%}
-              <div class="product-page__blocks-bottom" {{ block.shopify_attributes }}>
-                {% content_for 'blocks' %}
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
+          {%- assign bottom_blocks = section.blocks | where: "settings.position", "bottom" -%}
+          {%- if bottom_blocks.size > 0 -%}
+            <div class="product-page__blocks-bottom">
+              {%- for block in bottom_blocks -%}
+                {% content_for 'block', type: block.type, id: block.id %}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
 
           {%- comment -%} Product Form {%- endcomment -%}
           <div class="product-page__form">
@@ -657,32 +659,26 @@
   "name": "t:general.product",
   "blocks": [
     {
-      "type": "top",
-      "name": "t:general.top_block",
-      "limit": 1,
-      "blocks": [
+      "type": "@theme",
+      "settings": [
         {
-          "type": "@theme"
-        },
-        {
-          "type": "@app"
+          "type": "select",
+          "id": "position",
+          "label": "t:labels.position",
+          "options": [
+            {
+              "value": "top",
+              "label": "t:options.position.top"
+            },
+            {
+              "value": "bottom",
+              "label": "t:options.position.bottom"
+            }
+          ],
+          "default": "top",
+          "info": "t:labels.position_info"
         }
-      ],
-      "settings": []
-    },
-    {
-      "type": "bottom",
-      "name": "t:general.bottom_block",
-      "limit": 1,
-      "blocks": [
-        {
-          "type": "@theme"
-        },
-        {
-          "type": "@app"
-        }
-      ],
-      "settings": []
+      ]
     },
     {
       "type": "@app"
