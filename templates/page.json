@@ -11,10 +11,24 @@
   "sections": {
     "main": {
       "type": "page",
+      "disabled": true,
       "settings": {}
+    },
+    "contact_form_t8qXG4": {
+      "type": "contact-form",
+      "name": "t:general.contact_form",
+      "settings": {
+        "title": "Contact us",
+        "title_alignment": "center",
+        "max_width": 600,
+        "input_corner_radius": 8,
+        "spacing_top": 80,
+        "spacing_bottom": 80
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "contact_form_t8qXG4"
   ]
 }
