@@ -26,6 +26,12 @@
     "accessibility": {
       "close": "Close"
     },
+    "newsletter": {
+      "success": "Thank you for subscribing!"
+    },
+    "footer": {
+      "all_rights_reserved": "All rights reserved"
+    },
     "cart": {
       "title": "Cart",
       "empty": "Your cart is empty",
