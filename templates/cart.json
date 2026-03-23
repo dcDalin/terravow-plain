@@ -11,10 +11,58 @@
   "sections": {
     "main": {
       "type": "cart",
-      "settings": {}
+      "settings": {
+        "empty_cart_text": "Your cart is empty",
+        "continue_shopping_text": "Continue shopping",
+        "show_cart_note": false
+      }
+    },
+    "marquee_ADXMmk": {
+      "type": "marquee",
+      "blocks": {
+        "item_AajeR6": {
+          "type": "item",
+          "settings": {
+            "icon": "★",
+            "text": "Welcome to our store"
+          }
+        },
+        "item_AJzNzy": {
+          "type": "item",
+          "settings": {
+            "icon": "🚚",
+            "text": "Free shipping"
+          }
+        },
+        "item_nbHMiD": {
+          "type": "item",
+          "settings": {
+            "icon": "✨",
+            "text": "Shop now"
+          }
+        }
+      },
+      "block_order": [
+        "item_AajeR6",
+        "item_AJzNzy",
+        "item_nbHMiD"
+      ],
+      "name": "t:general.marquee",
+      "settings": {
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "font_size": 16,
+        "padding_top": 16,
+        "padding_bottom": 16,
+        "gap": 32,
+        "separator": "•",
+        "direction": "normal",
+        "speed": 30
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "marquee_ADXMmk"
   ]
 }
