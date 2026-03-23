@@ -102,7 +102,11 @@
     "checkout": "Checkout",
     "title": "Cart",
     "update": "Update",
-    "remove": "Remove"
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "taxes_and_shipping": "Taxes and shipping calculated at checkout",
+    "note": "Order note",
+    "note_placeholder": "Add special instructions for your order..."
   },
   "customers": {
     "login": {
