@@ -13,6 +13,16 @@ body {
   min-height: 100svh;
 }
 
+main,
+#MainContent,
+.shopify-section-group-template-content {
+  flex: 1 0 auto;
+}
+
+.shopify-section-group-footer-group {
+  flex-shrink: 0;
+}
+
 html:has(dialog[scroll-lock][open], details[scroll-lock][open]) {
   overflow: hidden;
 }
