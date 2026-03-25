@@ -69,58 +69,18 @@
             {%- endif -%}
           </div>
 
-          {%- comment -%} Top Blocks - Above Description {%- endcomment -%}
-          {%- assign has_top_blocks = false -%}
-          {%- for block in section.blocks -%}
-            {%- liquid
-              assign position = block.settings.position | default: 'top'
-            -%}
-            {%- if position == "top" -%}
-              {%- assign has_top_blocks = true -%}
-              {%- break -%}
-            {%- endif -%}
-          {%- endfor -%}
-
-          {%- if has_top_blocks -%}
-            <div class="product-page__blocks-top">
-              {%- for block in section.blocks -%}
-                {%- liquid
-                  assign position = block.settings.position | default: 'top'
-                -%}
-                {%- if position == "top" -%}
-                  {% render block %}
-                {%- endif -%}
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
-
           {%- if product.description != blank -%}
             <div class="product-page__description">
               {{ product.description }}
             </div>
           {%- endif -%}
 
-          {%- comment -%} Bottom Blocks - Below Description {%- endcomment -%}
-          {%- assign has_bottom_blocks = false -%}
-          {%- for block in section.blocks -%}
-            {%- liquid
-              assign position = block.settings.position | default: 'top'
-            -%}
-            {%- if position == "bottom" -%}
-              {%- assign has_bottom_blocks = true -%}
-              {%- break -%}
-            {%- endif -%}
-          {%- endfor -%}
-
-          {%- if has_bottom_blocks -%}
-            <div class="product-page__blocks-bottom">
-              {%- for block in section.blocks -%}
-                {%- liquid
-                  assign position = block.settings.position | default: 'top'
-                -%}
-                {%- if position == "bottom" -%}
-                  {% render block %}
-                {%- endif -%}
+          {%- comment -%} Theme Blocks - Below Description {%- endcomment -%}
+          {%- assign theme_blocks = section.blocks | where: "type", "@theme" -%}
+          {%- if theme_blocks.size > 0 -%}
+            <div class="product-page__blocks">
+              {%- for block in theme_blocks -%}
+                {% render block %}
               {%- endfor -%}
             </div>
           {%- endif -%}
@@ -527,8 +487,7 @@
     }
   }
 
-  .product-page__blocks-top,
-  .product-page__blocks-bottom,
+  .product-page__blocks,
   .product-page__blocks-app {
     display: flex;
     flex-direction: column;
@@ -537,15 +496,13 @@
   }
 
   @media (min-width: 768px) {
-    .product-page__blocks-top,
-    .product-page__blocks-bottom,
+    .product-page__blocks,
     .product-page__blocks-app {
       gap: 1rem;
     }
   }
 
-  .product-page__blocks-top:empty,
-  .product-page__blocks-bottom:empty,
+  .product-page__blocks:empty,
   .product-page__blocks-app:empty {
     display: none;
   }
