@@ -129,10 +129,64 @@
       ],
       "name": "t:general.custom_section",
       "settings": {}
+    },
+    "how_it_works_HaVXU9": {
+      "type": "how-it-works",
+      "blocks": {
+        "step_HNM7EN": {
+          "type": "step",
+          "settings": {
+            "alt_text": "",
+            "heading": "",
+            "description": ""
+          }
+        },
+        "step_w97XFr": {
+          "type": "step",
+          "settings": {
+            "alt_text": "",
+            "heading": "Step 2",
+            "description": "Second step description"
+          }
+        },
+        "step_i8rTfr": {
+          "type": "step",
+          "settings": {
+            "alt_text": "",
+            "heading": "Step 3",
+            "description": "Third step description"
+          }
+        },
+        "step_iyDRQY": {
+          "type": "step",
+          "settings": {
+            "alt_text": "",
+            "heading": "Step 4",
+            "description": "Fourth step description"
+          }
+        }
+      },
+      "block_order": [
+        "step_HNM7EN",
+        "step_w97XFr",
+        "step_i8rTfr",
+        "step_iyDRQY"
+      ],
+      "name": "t:general.how_it_works",
+      "settings": {
+        "subtitle": "How it works",
+        "title": "Simple steps to get started",
+        "title_alignment": "center",
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "pause_duration": 2,
+        "show_arrows": true
+      }
     }
   },
   "order": [
     "main",
-    "custom_section_FLPhKj"
+    "custom_section_FLPhKj",
+    "how_it_works_HaVXU9"
   ]
 }
