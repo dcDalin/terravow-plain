@@ -75,16 +75,6 @@
             </div>
           {%- endif -%}
 
-          {%- comment -%} Theme Blocks - Below Description {%- endcomment -%}
-          {%- assign theme_blocks = section.blocks | where: "type", "@theme" -%}
-          {%- if theme_blocks.size > 0 -%}
-            <div class="product-page__blocks">
-              {%- for block in theme_blocks -%}
-                {% render block %}
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
-
           {%- comment -%} Product Form {%- endcomment -%}
           <div class="product-page__form">
             {% form 'product', product, class: 'product-form' %}
@@ -151,6 +141,16 @@
               {{ form | payment_button }}
             {% endform %}
           </div>
+
+          {%- comment -%} Theme Blocks - Below Product Form {%- endcomment -%}
+          {%- assign theme_blocks = section.blocks | where: "type", "@theme" -%}
+          {%- if theme_blocks.size > 0 -%}
+            <div class="product-page__blocks">
+              {%- for block in theme_blocks -%}
+                {% render block %}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
         </div>
 
         {%- comment -%} App Blocks {%- endcomment -%}
