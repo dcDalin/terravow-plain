@@ -168,6 +168,7 @@
         "step_i8rTfr",
         "step_iyDRQY"
       ],
+      "disabled": true,
       "name": "t:general.how_it_works",
       "settings": {
         "subtitle": "How it works",
