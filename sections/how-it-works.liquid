@@ -35,9 +35,7 @@
           aria-label="{{ 'sections.how_it_works.previous' | t }}"
           type="button"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <i data-lucide="arrow-left"></i>
         </button>
       {%- endif -%}
 
@@ -67,12 +65,23 @@
                   </div>
                 {%- endif -%}
 
-                {%- if block.settings.heading != blank or block.settings.description != blank -%}
+                {%- liquid
+                  assign has_heading = false
+                  assign has_description = false
+                  if block.settings.heading != blank
+                    assign has_heading = true
+                  endif
+                  if block.settings.description != blank
+                    assign has_description = true
+                  endif
+                -%}
+
+                {%- if has_heading or has_description -%}
                   <div class="how-it-works__text">
-                    {%- if block.settings.heading != blank -%}
+                    {%- if has_heading -%}
                       <h3 class="how-it-works__heading">{{ block.settings.heading }}</h3>
                     {%- endif -%}
-                    {%- if block.settings.description != blank -%}
+                    {%- if has_description -%}
                       <p class="how-it-works__description">{{ block.settings.description }}</p>
                     {%- endif -%}
                   </div>
@@ -89,9 +98,7 @@
           aria-label="{{ 'sections.how_it_works.next' | t }}"
           type="button"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <i data-lucide="arrow-right"></i>
         </button>
       {%- endif -%}
     </div>
@@ -177,6 +184,13 @@
     padding-bottom: 75%;
     overflow: hidden;
     background: #e5e5e5;
+    border-radius: 12px;
+    flex: 1;
+  }
+
+  .how-it-works__slide-content:has(.how-it-works__text) .how-it-works__image-wrapper {
+    border-radius: 0;
+    flex: 0 0 auto;
   }
 
   .how-it-works__image-wrapper--placeholder {
@@ -239,6 +253,13 @@
     cursor: pointer;
     transition: all 0.3s ease;
     color: #333;
+  }
+
+  .how-it-works__nav i,
+  .how-it-works__nav svg {
+    display: block;
+    width: 24px;
+    height: 24px;
   }
 
   .how-it-works__nav:hover {
@@ -598,6 +619,10 @@
   document.addEventListener('DOMContentLoaded', () => {
     const carousels = document.querySelectorAll('.how-it-works');
     carousels.forEach(carousel => new HowItWorksCarousel(carousel));
+
+    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+      lucide.createIcons();
+    }
   });
 
   if (Shopify && Shopify.designMode) {
@@ -605,6 +630,10 @@
       const carousel = event.target.querySelector('.how-it-works');
       if (carousel) {
         new HowItWorksCarousel(carousel);
+
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+          lucide.createIcons();
+        }
       }
     });
   }
