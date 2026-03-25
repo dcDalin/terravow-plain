@@ -1,0 +1,34 @@
+{% doc %}
+  Renders a product testimonial block where customers share feedback about a specific product.
+
+  @example
+  {% content_for 'block', type: 'product-testimonial', id: 'product-testimonial-1' %}
+{% enddoc %}
+
+<div class="product-testimonial" {{ block.shopify_attributes }}>
+  <h1>Product Testimonial</h1>
+</div>
+
+{% stylesheet %}
+  .product-testimonial {
+    padding: 20px;
+  }
+
+  .product-testimonial h1 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.product_testimonial",
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:general.product_testimonial",
+      "category": "t:general.content"
+    }
+  ]
+}
+{% endschema %}
