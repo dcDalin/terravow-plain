@@ -84,21 +84,29 @@
 </div>
 
 {% stylesheet %}
+  .how-it-works,
+  .how-it-works *,
+  .how-it-works *::before,
+  .how-it-works *::after {
+    box-sizing: border-box;
+  }
+
   .how-it-works {
     width: 100%;
     padding: 60px 0;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
   .how-it-works__container {
     max-width: 1400px;
     margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .how-it-works__header {
     text-align: var(--title-alignment, center);
     margin-bottom: 48px;
-    padding: 0 20px;
   }
 
   .how-it-works__subtitle {
@@ -119,11 +127,14 @@
   .how-it-works__carousel-wrapper {
     position: relative;
     margin: 0 60px;
+    width: calc(100% - 120px);
+    box-sizing: border-box;
   }
 
   .how-it-works__carousel-container {
     overflow: hidden;
     width: 100%;
+    max-width: 100%;
   }
 
   .how-it-works__carousel-track {
@@ -140,6 +151,7 @@
   .how-it-works__slide {
     flex: 0 0 calc((100% - 48px) / 3);
     min-width: 0;
+    max-width: 100%;
   }
 
   .how-it-works__slide-content {
@@ -150,6 +162,7 @@
   .how-it-works__image-wrapper {
     position: relative;
     width: 100%;
+    max-width: 100%;
     padding-bottom: 100%;
     overflow: hidden;
     background: #e5e5e5;
@@ -225,6 +238,7 @@
   @media (max-width: 1024px) {
     .how-it-works__carousel-wrapper {
       margin: 0 50px;
+      width: calc(100% - 100px);
     }
 
     .how-it-works__carousel-track {
@@ -249,16 +263,21 @@
       padding: 40px 0;
     }
 
+    .how-it-works__container {
+      padding: 0 48px;
+    }
+
     .how-it-works__title {
       font-size: 28px;
     }
 
     .how-it-works__carousel-wrapper {
-      margin: 0 40px;
+      margin: 0;
+      width: 100%;
     }
 
     .how-it-works__carousel-track {
-      gap: 12px;
+      gap: 0;
     }
 
     .how-it-works__nav {
@@ -267,21 +286,27 @@
     }
 
     .how-it-works__nav--prev {
-      left: -40px;
+      left: -48px;
     }
 
     .how-it-works__nav--next {
-      right: -40px;
+      right: -48px;
     }
 
     .how-it-works__slide {
       flex: 0 0 100%;
+      max-width: 100%;
     }
   }
 
   @media (max-width: 480px) {
+    .how-it-works__container {
+      padding: 0 40px;
+    }
+
     .how-it-works__carousel-wrapper {
       margin: 0;
+      width: 100%;
     }
 
     .how-it-works__nav {
@@ -289,12 +314,18 @@
       height: 36px;
     }
 
+    .how-it-works__nav i,
+    .how-it-works__nav svg {
+      width: 20px;
+      height: 20px;
+    }
+
     .how-it-works__nav--prev {
-      left: 8px;
+      left: -40px;
     }
 
     .how-it-works__nav--next {
-      right: 8px;
+      right: -40px;
     }
   }
 {% endstylesheet %}
@@ -499,7 +530,7 @@
     updatePosition() {
       const slideWidth = this.allSlides[0].offsetWidth;
       const computedStyle = window.getComputedStyle(this.track);
-      const gap = parseInt(computedStyle.gap) || 24;
+      const gap = parseInt(computedStyle.gap) || 0;
       const offset = -(this.currentIndex * (slideWidth + gap));
       this.track.style.transform = `translateX(${offset}px)`;
     }
