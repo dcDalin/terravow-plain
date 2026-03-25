@@ -176,6 +176,10 @@
         "date_asc": "Date, old to new",
         "date_desc": "Date, new to old"
       }
+    },
+    "how_it_works": {
+      "previous": "Previous slide",
+      "next": "Next slide"
     }
   }
 }
