@@ -136,33 +136,29 @@
         "step_HNM7EN": {
           "type": "step",
           "settings": {
-            "alt_text": "",
-            "heading": "",
-            "description": ""
+            "image": "shopify://shop_images/Img1.webp",
+            "alt_text": ""
           }
         },
         "step_w97XFr": {
           "type": "step",
           "settings": {
-            "alt_text": "",
-            "heading": "Step 2",
-            "description": "Second step description"
+            "image": "shopify://shop_images/soap-image-1_76b4ef60-03f9-4ba2-96f2-c01e63b4c2c5.png",
+            "alt_text": ""
           }
         },
         "step_i8rTfr": {
           "type": "step",
           "settings": {
-            "alt_text": "",
-            "heading": "Step 3",
-            "description": "Third step description"
+            "image": "shopify://shop_images/gempages_527722884475389041-1fc166bf-cff8-46da-86fb-8ec726c978f5.webp",
+            "alt_text": ""
           }
         },
         "step_iyDRQY": {
           "type": "step",
           "settings": {
-            "alt_text": "",
-            "heading": "Step 4",
-            "description": "Fourth step description"
+            "image": "shopify://shop_images/TerraVowLogo.webp",
+            "alt_text": ""
           }
         }
       },
