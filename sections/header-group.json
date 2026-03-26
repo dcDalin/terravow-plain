@@ -17,9 +17,53 @@
         "menu": "main-menu",
         "customer_account_menu": "customer-account-main-menu"
       }
+    },
+    "marquee_h7Jqw9": {
+      "type": "marquee",
+      "blocks": {
+        "item_aBmikX": {
+          "type": "item",
+          "settings": {
+            "icon": "★",
+            "text": "Welcome to our store"
+          }
+        },
+        "item_GPJXym": {
+          "type": "item",
+          "settings": {
+            "icon": "🚚",
+            "text": "Free shipping"
+          }
+        },
+        "item_HcBMeR": {
+          "type": "item",
+          "settings": {
+            "icon": "✨",
+            "text": "Shop now"
+          }
+        }
+      },
+      "block_order": [
+        "item_aBmikX",
+        "item_GPJXym",
+        "item_HcBMeR"
+      ],
+      "name": "t:general.marquee",
+      "settings": {
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "font_size": 16,
+        "padding_top": 16,
+        "padding_bottom": 16,
+        "gap": 32,
+        "separator": "•",
+        "direction": "normal",
+        "speed": 30
+      }
     }
   },
   "order": [
-    "header"
+    "header",
+    "marquee_h7Jqw9"
   ]
 }
