@@ -131,6 +131,7 @@
     "position": "Position",
     "position_info": "Choose where this block appears relative to the product description",
     "show_arrows": "Show navigation arrows",
+    "show_navigation": "Show navigation arrows",
     "show_cart_note": "Show order note field",
     "show_payment_icons": "Show payment icons",
     "show_powered_by": "Show powered by Shopify",

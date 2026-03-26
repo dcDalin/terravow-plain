@@ -1,29 +1,546 @@
 {% doc %}
-  Renders a product testimonial block where customers share feedback about a specific product.
+  Renders product testimonials in a carousel format with prev/next navigation.
+
+  Testimonials are stored as product metafields using metaobjects:
+  - Metaobject: "product_testimonial" with fields:
+    - customer_image (file_reference)
+    - customer_name (single_line_text_field)
+    - testimonial_text (multi_line_text_field)
+    - star_rating (number_integer, 1-5)
+  - Product metafield: custom.product_testimonial (list.metaobject_reference)
 
   @example
   {% content_for 'block', type: 'product-testimonial', id: 'product-testimonial-1' %}
 {% enddoc %}
 
-<div class="product-testimonial" {{ block.shopify_attributes }}>
-  <h1>Product Testimonial</h1>
-</div>
+{%- liquid
+  assign testimonials = product.metafields.custom.product_testimonial.value
+  assign testimonials_count = testimonials | size | default: 0
+  assign show_navigation = block.settings.show_navigation | default: true
+-%}
+
+{%- if testimonials_count > 0 -%}
+  <div
+    class="product-testimonial"
+    data-testimonial-carousel
+    data-total="{{ testimonials_count }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.heading != blank -%}
+      <h2 class="product-testimonial__heading">{{ block.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="product-testimonial__container">
+      {%- comment -%} Navigation - Previous {%- endcomment -%}
+      {%- if show_navigation and testimonials_count > 1 -%}
+        <button
+          class="product-testimonial__nav product-testimonial__nav--prev"
+          data-testimonial-prev
+          aria-label="{{ 'products.testimonials.previous' | t }}"
+        >
+          <i data-lucide="chevron-left"></i>
+        </button>
+      {%- endif -%}
+
+      {%- comment -%} Testimonials Track {%- endcomment -%}
+      <div class="product-testimonial__track-wrapper">
+        <div class="product-testimonial__track" data-testimonial-track>
+          {%- for testimonial in testimonials -%}
+            <div
+              class="product-testimonial__slide{% if forloop.first %} active{% endif %}"
+              data-testimonial-index="{{ forloop.index0 }}"
+            >
+              <div class="product-testimonial__card">
+                {%- comment -%} Star Rating {%- endcomment -%}
+                {%- liquid
+                  assign rating_value = testimonial.star_rating.value
+                  assign rating_floor = rating_value | floor
+                  assign rating_decimal = rating_value | minus: rating_floor | times: 10 | round
+                  assign show_half_star = false
+                  assign half_star_index = 0
+
+                  if rating_decimal >= 3 and rating_decimal < 8
+                    assign show_half_star = true
+                    assign half_star_index = rating_floor | plus: 1
+                  elsif rating_decimal >= 8
+                    assign rating_floor = rating_floor | plus: 1
+                  endif
+                -%}
+
+                <div class="product-testimonial__rating" title="{{ rating_value }} out of 5 stars">
+                  {%- for i in (1..5) -%}
+                    {%- liquid
+                      assign is_filled = false
+                      assign is_half = false
+
+                      if i <= rating_floor
+                        assign is_filled = true
+                      elsif show_half_star and i == half_star_index
+                        assign is_half = true
+                      endif
+                    -%}
+
+                    {%- if is_filled -%}
+                      <i data-lucide="star" class="product-testimonial__star filled"></i>
+                    {%- elsif is_half -%}
+                      <i data-lucide="star-half" class="product-testimonial__star half-filled"></i>
+                    {%- else -%}
+                      <i data-lucide="star" class="product-testimonial__star empty"></i>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  <span class="product-testimonial__rating-value">{{ rating_value }}</span>
+                </div>
+
+                {%- comment -%} Testimonial Text {%- endcomment -%}
+                {%- if testimonial.testimonial_text != blank -%}
+                  <div class="product-testimonial__text">
+                    {{ testimonial.testimonial_text }}
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%} Customer Info {%- endcomment -%}
+                <div class="product-testimonial__customer">
+                  {%- if testimonial.customer_image != blank -%}
+                    <div class="product-testimonial__image">
+                      {{ testimonial.customer_image | image_url: width: 80, height: 80 | image_tag: loading: 'lazy' }}
+                    </div>
+                  {%- endif -%}
+
+                  {%- if testimonial.customer_name != blank -%}
+                    <div class="product-testimonial__name">
+                      {{ testimonial.customer_name }}
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- comment -%} Navigation - Next {%- endcomment -%}
+      {%- if show_navigation and testimonials_count > 1 -%}
+        <button
+          class="product-testimonial__nav product-testimonial__nav--next"
+          data-testimonial-next
+          aria-label="{{ 'products.testimonials.next' | t }}"
+        >
+          <i data-lucide="chevron-right"></i>
+        </button>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Dots Indicator {%- endcomment -%}
+    {%- if testimonials_count > 1 -%}
+      <div class="product-testimonial__dots" data-testimonial-dots>
+        {%- for testimonial in testimonials -%}
+          <button
+            class="product-testimonial__dot{% if forloop.first %} active{% endif %}"
+            data-testimonial-dot="{{ forloop.index0 }}"
+            aria-label="{{ 'products.testimonials.go_to' | t: number: forloop.index }}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
 
 {% stylesheet %}
   .product-testimonial {
-    padding: 20px;
+    padding: 2rem 0;
+    width: 100%;
   }
 
-  .product-testimonial h1 {
-    margin: 0;
+  .product-testimonial__heading {
+    margin: 0 0 2rem 0;
     font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    color: #1f2937;
+  }
+
+  .product-testimonial__container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .product-testimonial__track-wrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    min-height: 280px;
+  }
+
+  .product-testimonial__track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-testimonial__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    pointer-events: none;
+  }
+
+  .product-testimonial__slide.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .product-testimonial__card {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 280px;
+  }
+
+  .product-testimonial__rating {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-testimonial__star {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .product-testimonial__star.empty {
+    color: #d1d5db;
+    fill: none;
+    stroke: #d1d5db;
+  }
+
+  .product-testimonial__star.filled {
+    color: #fbbf24;
+    fill: #fbbf24;
+    stroke: #fbbf24;
+  }
+
+  .product-testimonial__star.half-filled {
+    color: #fbbf24;
+    fill: #fbbf24;
+    stroke: #fbbf24;
+  }
+
+  .product-testimonial__rating-value {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .product-testimonial__text {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #374151;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .product-testimonial__customer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .product-testimonial__image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .product-testimonial__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-testimonial__name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .product-testimonial__nav {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #374151;
+  }
+
+  .product-testimonial__nav:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    transform: scale(1.05);
+  }
+
+  .product-testimonial__nav:active {
+    transform: scale(0.95);
+  }
+
+  .product-testimonial__nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .product-testimonial__nav i,
+  .product-testimonial__nav svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .product-testimonial__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .product-testimonial__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d1d5db;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+  }
+
+  .product-testimonial__dot:hover {
+    background: #9ca3af;
+    transform: scale(1.2);
+  }
+
+  .product-testimonial__dot.active {
+    background: #1f2937;
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .product-testimonial {
+      padding: 1.5rem 0;
+    }
+
+    .product-testimonial__heading {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .product-testimonial__card {
+      padding: 1.5rem;
+      min-height: 250px;
+    }
+
+    .product-testimonial__text {
+      font-size: 0.9375rem;
+    }
+
+    .product-testimonial__nav {
+      width: 36px;
+      height: 36px;
+    }
+
+    .product-testimonial__nav i,
+    .product-testimonial__nav svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-testimonial__container {
+      gap: 0.5rem;
+    }
+
+    .product-testimonial__card {
+      padding: 1.25rem;
+    }
+
+    .product-testimonial__nav {
+      width: 32px;
+      height: 32px;
+    }
+
+    .product-testimonial__image {
+      width: 40px;
+      height: 40px;
+    }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  class ProductTestimonialCarousel {
+    constructor(container) {
+      this.container = container;
+      this.track = container.querySelector('[data-testimonial-track]');
+      this.slides = container.querySelectorAll('.product-testimonial__slide');
+      this.prevBtn = container.querySelector('[data-testimonial-prev]');
+      this.nextBtn = container.querySelector('[data-testimonial-next]');
+      this.dots = container.querySelectorAll('[data-testimonial-dot]');
+      this.currentIndex = 0;
+      this.total = parseInt(container.dataset.total) || this.slides.length;
+
+      if (this.slides.length > 0) {
+        this.init();
+      }
+    }
+
+    init() {
+      // Navigation buttons
+      if (this.prevBtn) {
+        this.prevBtn.addEventListener('click', () => this.prev());
+      }
+      if (this.nextBtn) {
+        this.nextBtn.addEventListener('click', () => this.next());
+      }
+
+      // Dots navigation
+      this.dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => this.goTo(index));
+      });
+
+      // Touch swipe support
+      if (this.track) {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        this.track.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        this.track.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          this.handleSwipe(touchStartX, touchEndX);
+        }, { passive: true });
+      }
+
+      // Initialize Lucide icons
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    }
+
+    handleSwipe(startX, endX) {
+      const threshold = 50;
+      const diff = startX - endX;
+
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          this.next();
+        } else {
+          this.prev();
+        }
+      }
+    }
+
+    prev() {
+      this.currentIndex = (this.currentIndex - 1 + this.total) % this.total;
+      this.update();
+    }
+
+    next() {
+      this.currentIndex = (this.currentIndex + 1) % this.total;
+      this.update();
+    }
+
+    goTo(index) {
+      this.currentIndex = index;
+      this.update();
+    }
+
+    update() {
+      // Update slides
+      this.slides.forEach((slide, index) => {
+        if (index === this.currentIndex) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Update dots
+      this.dots.forEach((dot, index) => {
+        if (index === this.currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+
+      // Reinitialize Lucide icons for star rating
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    }
+  }
+
+  // Initialize all testimonial carousels
+  function initTestimonialCarousels() {
+    const carousels = document.querySelectorAll('[data-testimonial-carousel]');
+    carousels.forEach(carousel => new ProductTestimonialCarousel(carousel));
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTestimonialCarousels);
+  } else {
+    initTestimonialCarousels();
+  }
+
+  // Reinitialize on Shopify section updates
+  if (typeof Shopify !== 'undefined' && Shopify.designMode) {
+    document.addEventListener('shopify:section:load', initTestimonialCarousels);
+  }
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "t:general.product_testimonial",
-  "settings": [],
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Customer Reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "t:labels.show_navigation",
+      "default": true
+    }
+  ],
   "presets": [
     {
       "name": "t:general.product_testimonial",

@@ -143,7 +143,12 @@
     "variant": "Variant",
     "quantity": "Quantity",
     "add_to_cart": "Add to cart",
-    "sold_out": "Sold out"
+    "sold_out": "Sold out",
+    "testimonials": {
+      "previous": "Previous testimonial",
+      "next": "Next testimonial",
+      "go_to": "Go to testimonial {{ number }}"
+    }
   },
   "sections": {
     "featured_collection": {
