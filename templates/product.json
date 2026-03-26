@@ -11,6 +11,17 @@
   "sections": {
     "main": {
       "type": "product",
+      "blocks": {
+        "product_testimonial_6ny8im": {
+          "type": "product-testimonial",
+          "name": "t:general.product_testimonial",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "product_testimonial_6ny8im"
+      ],
       "settings": {}
     },
     "how_it_works_HaVXU9": {
