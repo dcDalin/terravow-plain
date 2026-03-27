@@ -75,10 +75,49 @@
         "pause_duration": 2,
         "show_arrows": true
       }
+    },
+    "faq_RCWicB": {
+      "type": "faq",
+      "blocks": {
+        "faq_item_ye7pL4": {
+          "type": "faq-item",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>We offer a 30-day return policy on all products. Items must be unused and in original packaging.</p>"
+          },
+          "blocks": {}
+        },
+        "faq_item_Nh7wxK": {
+          "type": "faq-item",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>We offer a 30-day return policy on all products. Items must be unused and in original packaging.</p>"
+          },
+          "blocks": {}
+        },
+        "faq_item_BLj9Td": {
+          "type": "faq-item",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>We offer a 30-day return policy on all products. Items must be unused and in original packaging.</p>"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "faq_item_ye7pL4",
+        "faq_item_Nh7wxK",
+        "faq_item_BLj9Td"
+      ],
+      "name": "t:general.faq",
+      "settings": {
+        "heading": "Frequently Asked Questions"
+      }
     }
   },
   "order": [
     "main",
-    "how_it_works_HaVXU9"
+    "how_it_works_HaVXU9",
+    "faq_RCWicB"
   ]
 }
