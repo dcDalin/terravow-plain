@@ -15,7 +15,10 @@
         "product_testimonial_6ny8im": {
           "type": "product-testimonial",
           "name": "t:general.product_testimonial",
-          "settings": {},
+          "settings": {
+            "heading": "Customer Reviews",
+            "show_navigation": true
+          },
           "blocks": {}
         }
       },
