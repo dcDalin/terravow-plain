@@ -38,7 +38,7 @@
           data-testimonial-prev
           aria-label="{{ 'products.testimonials.previous' | t }}"
         >
-          <i data-lucide="chevron-left"></i>
+          <i data-lucide="arrow-left"></i>
         </button>
       {%- endif -%}
 
@@ -53,37 +53,14 @@
               <div class="product-testimonial__card">
                 {%- comment -%} Star Rating {%- endcomment -%}
                 {%- liquid
-                  assign rating_value = testimonial.star_rating.value
-                  assign rating_floor = rating_value | floor
-                  assign rating_decimal = rating_value | minus: rating_floor | times: 10 | round
-                  assign show_half_star = false
-                  assign half_star_index = 0
-
-                  if rating_decimal >= 3 and rating_decimal < 8
-                    assign show_half_star = true
-                    assign half_star_index = rating_floor | plus: 1
-                  elsif rating_decimal >= 8
-                    assign rating_floor = rating_floor | plus: 1
-                  endif
+                  assign rating_value = testimonial.star_rating.value | default: 5
+                  assign rating_rounded = rating_value | round
                 -%}
 
                 <div class="product-testimonial__rating" title="{{ rating_value }} out of 5 stars">
                   {%- for i in (1..5) -%}
-                    {%- liquid
-                      assign is_filled = false
-                      assign is_half = false
-
-                      if i <= rating_floor
-                        assign is_filled = true
-                      elsif show_half_star and i == half_star_index
-                        assign is_half = true
-                      endif
-                    -%}
-
-                    {%- if is_filled -%}
-                      <i data-lucide="star" class="product-testimonial__star filled"></i>
-                    {%- elsif is_half -%}
-                      <i data-lucide="star-half" class="product-testimonial__star half-filled"></i>
+                    {%- if i <= rating_rounded -%}
+                      <i data-lucide="star" class="product-testimonial__star filled" fill="currentColor"></i>
                     {%- else -%}
                       <i data-lucide="star" class="product-testimonial__star empty"></i>
                     {%- endif -%}
@@ -125,7 +102,7 @@
           data-testimonial-next
           aria-label="{{ 'products.testimonials.next' | t }}"
         >
-          <i data-lucide="chevron-right"></i>
+          <i data-lucide="arrow-right"></i>
         </button>
       {%- endif -%}
     </div>
@@ -147,30 +124,38 @@
 
 {% stylesheet %}
   .product-testimonial {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     width: 100%;
   }
 
   .product-testimonial__heading {
-    margin: 0 0 2rem 0;
-    font-size: 1.5rem;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.375rem;
     font-weight: 600;
     text-align: center;
     color: #1f2937;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeInDown 0.5s ease forwards;
+  }
+
+  @keyframes fadeInDown {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .product-testimonial__container {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    width: 100%;
   }
 
   .product-testimonial__track-wrapper {
-    flex: 1;
+    width: 100%;
     overflow: hidden;
     position: relative;
-    min-height: 280px;
+    min-height: 240px;
   }
 
   .product-testimonial__track {
@@ -186,24 +171,62 @@
     width: 100%;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    transform: scale(0.95) translateY(10px);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
 
   .product-testimonial__slide.active {
     opacity: 1;
     visibility: visible;
+    transform: scale(1) translateY(0);
     pointer-events: auto;
   }
 
   .product-testimonial__card {
-    background: #f9fafb;
-    border-radius: 12px;
-    padding: 2rem;
+    background: #fafafa;
+    border-radius: 16px;
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    min-height: 280px;
+    gap: 1.25rem;
+    min-height: 240px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-testimonial__card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__card::before {
+    animation: shimmer 2s ease-in-out 0.3s;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  .product-testimonial__card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
   }
 
   .product-testimonial__rating {
@@ -214,115 +237,275 @@
   }
 
   .product-testimonial__star {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
-    transition: all 0.2s ease;
+    opacity: 0;
+    transform: scale(0.3) rotate(-180deg);
+    transition: transform 0.2s ease, opacity 0.3s ease;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__star {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  .product-testimonial__slide.active .product-testimonial__star:nth-child(1) {
+    animation: starAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__star:nth-child(2) {
+    animation: starAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__star:nth-child(3) {
+    animation: starAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__star:nth-child(4) {
+    animation: starAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s forwards;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__star:nth-child(5) {
+    animation: starAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+  }
+
+  @keyframes starAppear {
+    0% {
+      opacity: 0;
+      transform: scale(0.3) rotate(-180deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
   }
 
   .product-testimonial__star.empty {
-    color: #d1d5db;
+    color: #e5e7eb;
     fill: none;
-    stroke: #d1d5db;
+    stroke: currentColor;
+    stroke-width: 2;
   }
 
   .product-testimonial__star.filled {
-    color: #fbbf24;
-    fill: #fbbf24;
-    stroke: #fbbf24;
-  }
-
-  .product-testimonial__star.half-filled {
-    color: #fbbf24;
-    fill: #fbbf24;
-    stroke: #fbbf24;
+    color: #f59e0b;
+    fill: currentColor;
+    stroke: currentColor;
   }
 
   .product-testimonial__rating-value {
     margin-left: 0.5rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #374151;
+    color: #6b7280;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__rating-value {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.4s;
   }
 
   .product-testimonial__text {
     flex: 1;
-    font-size: 1rem;
+    font-size: 0.9375rem;
     line-height: 1.6;
-    color: #374151;
+    color: #4b5563;
     text-align: center;
     font-style: italic;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__text {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.5s;
   }
 
   .product-testimonial__customer {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.75rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .product-testimonial__slide.active .product-testimonial__customer {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.65s;
   }
 
   .product-testimonial__image {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .product-testimonial__image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .product-testimonial__customer:hover .product-testimonial__image::before {
+    opacity: 1;
   }
 
   .product-testimonial__image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .product-testimonial__customer:hover .product-testimonial__image img {
+    transform: scale(1.05);
   }
 
   .product-testimonial__name {
     font-size: 0.875rem;
     font-weight: 600;
     color: #1f2937;
+    transition: color 0.3s ease;
+  }
+
+  .product-testimonial__customer:hover .product-testimonial__name {
+    color: #111827;
+  }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    .product-testimonial__slide,
+    .product-testimonial__card,
+    .product-testimonial__star,
+    .product-testimonial__rating-value,
+    .product-testimonial__text,
+    .product-testimonial__customer,
+    .product-testimonial__nav,
+    .product-testimonial__dot,
+    .product-testimonial__heading,
+    .product-testimonial__image img {
+      animation: none !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .product-testimonial__slide.active .product-testimonial__star,
+    .product-testimonial__slide.active .product-testimonial__rating-value,
+    .product-testimonial__slide.active .product-testimonial__text,
+    .product-testimonial__slide.active .product-testimonial__customer {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .product-testimonial__dot {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .product-testimonial__nav {
+      opacity: 1 !important;
+    }
+
+    .product-testimonial__heading {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 
   .product-testimonial__nav {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
     cursor: pointer;
-    transition: all 0.2s ease;
-    color: #374151;
+    color: #6b7280;
+    transition: color 0.2s ease;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  .product-testimonial__nav--prev {
+    left: -32px;
+    animation-delay: 0.3s;
+  }
+
+  .product-testimonial__nav--next {
+    right: -32px;
+    animation-delay: 0.4s;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
   }
 
   .product-testimonial__nav:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
-    transform: scale(1.05);
-  }
-
-  .product-testimonial__nav:active {
-    transform: scale(0.95);
+    color: #1f2937;
   }
 
   .product-testimonial__nav:disabled {
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: not-allowed;
-    transform: none;
   }
 
   .product-testimonial__nav i,
   .product-testimonial__nav svg {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .product-testimonial__nav:hover:not(:disabled) {
+    animation: arrowPulse 1.5s ease-in-out infinite;
+  }
+
+  .product-testimonial__nav:hover:not(:disabled) i,
+  .product-testimonial__nav:hover:not(:disabled) svg {
+    transform: scale(1.2);
+  }
+
+  .product-testimonial__nav:active:not(:disabled) i,
+  .product-testimonial__nav:active:not(:disabled) svg {
+    transform: scale(1.05);
+    transition-duration: 0.1s;
+  }
+
+  @keyframes arrowPulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
   }
 
   .product-testimonial__dots {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
   }
 
   .product-testimonial__dot {
@@ -332,69 +515,142 @@
     background: #d1d5db;
     border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     padding: 0;
+    position: relative;
+    opacity: 0;
+    transform: scale(0);
+    animation: dotAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .product-testimonial__dot:nth-child(1) { animation-delay: 0.8s; }
+  .product-testimonial__dot:nth-child(2) { animation-delay: 0.85s; }
+  .product-testimonial__dot:nth-child(3) { animation-delay: 0.9s; }
+  .product-testimonial__dot:nth-child(4) { animation-delay: 0.95s; }
+  .product-testimonial__dot:nth-child(5) { animation-delay: 1s; }
+  .product-testimonial__dot:nth-child(6) { animation-delay: 1.05s; }
+  .product-testimonial__dot:nth-child(7) { animation-delay: 1.1s; }
+  .product-testimonial__dot:nth-child(8) { animation-delay: 1.15s; }
+
+  @keyframes dotAppear {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .product-testimonial__dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
   }
 
   .product-testimonial__dot:hover {
     background: #9ca3af;
-    transform: scale(1.2);
+    transform: scale(1.25);
+  }
+
+  .product-testimonial__dot:hover::after {
+    border-color: rgba(156, 163, 175, 0.3);
   }
 
   .product-testimonial__dot.active {
-    background: #1f2937;
-    width: 24px;
+    background: #374151;
+    width: 20px;
     border-radius: 4px;
+    transform: scale(1);
+  }
+
+  .product-testimonial__dot.active::after {
+    border-radius: 8px;
+    border-color: transparent;
+  }
+
+  @media (min-width: 1024px) and (max-width: 1199px) {
+    .product-testimonial__nav--prev {
+      left: -24px;
+    }
+
+    .product-testimonial__nav--next {
+      right: -24px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1023px) {
+    .product-testimonial__nav--prev {
+      left: -20px;
+    }
+
+    .product-testimonial__nav--next {
+      right: -20px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .product-testimonial__nav i,
+    .product-testimonial__nav svg {
+      width: 24px;
+      height: 24px;
+    }
   }
 
   @media (max-width: 768px) {
     .product-testimonial {
-      padding: 1.5rem 0;
+      padding: 1.25rem 0;
     }
 
     .product-testimonial__heading {
       font-size: 1.25rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .product-testimonial__card {
       padding: 1.5rem;
-      min-height: 250px;
+      min-height: 220px;
     }
 
     .product-testimonial__text {
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
     }
 
-    .product-testimonial__nav {
-      width: 36px;
-      height: 36px;
+    .product-testimonial__nav--prev {
+      left: 0;
+    }
+
+    .product-testimonial__nav--next {
+      right: 0;
     }
 
     .product-testimonial__nav i,
     .product-testimonial__nav svg {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
     }
   }
 
   @media (max-width: 480px) {
-    .product-testimonial__container {
-      gap: 0.5rem;
-    }
-
     .product-testimonial__card {
       padding: 1.25rem;
-    }
-
-    .product-testimonial__nav {
-      width: 32px;
-      height: 32px;
+      gap: 1rem;
     }
 
     .product-testimonial__image {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
+    }
+
+    .product-testimonial__star {
+      width: 16px;
+      height: 16px;
+    }
+
+    .product-testimonial__nav i,
+    .product-testimonial__nav svg {
+      width: 20px;
+      height: 20px;
     }
   }
 {% endstylesheet %}
