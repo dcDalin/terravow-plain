@@ -1,0 +1,113 @@
+{%- liquid
+  assign heading = section.settings.heading | default: ''
+-%}
+
+<div class="faq-section" data-faq-section>
+  <div class="faq-section__container">
+    {%- if heading != blank -%}
+      <h2 class="faq-section__heading">{{ heading }}</h2>
+    {%- endif -%}
+
+    <div class="faq-section__items">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .faq-section {
+    width: 100%;
+    padding: 3rem 0;
+  }
+
+  .faq-section__container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .faq-section__heading {
+    font-size: 1.875rem;
+    font-weight: 700;
+    text-align: center;
+    color: #111827;
+    margin: 0 0 2.5rem 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes fadeInDown {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .faq-section__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  @media (max-width: 768px) {
+    .faq-section {
+      padding: 2rem 0;
+    }
+
+    .faq-section__container {
+      padding: 0 1rem;
+    }
+
+    .faq-section__heading {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .faq-section__heading {
+      font-size: 1.375rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.faq",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Frequently Asked Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.faq",
+      "category": "t:general.content",
+      "blocks": [
+        {
+          "type": "faq-item"
+        },
+        {
+          "type": "faq-item"
+        },
+        {
+          "type": "faq-item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
