@@ -1,11 +1,12 @@
 {%- liquid
   assign heading = section.settings.heading | default: ''
+  assign heading_alignment = section.settings.heading_alignment | default: 'center'
 -%}
 
 <div class="faq-section" data-faq-section>
   <div class="faq-section__container">
     {%- if heading != blank -%}
-      <h2 class="faq-section__heading">{{ heading }}</h2>
+      <h2 class="faq-section__heading" style="--heading-align: {{ heading_alignment }}">{{ heading }}</h2>
     {%- endif -%}
 
     <div class="faq-section__items">
@@ -29,7 +30,7 @@
   .faq-section__heading {
     font-size: 1.875rem;
     font-weight: 700;
-    text-align: center;
+    text-align: var(--heading-align, center);
     color: #111827;
     margin: 0 0 2.5rem 0;
     opacity: 0;
@@ -85,6 +86,26 @@
       "id": "heading",
       "label": "t:labels.heading",
       "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "t:labels.title_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.alignment.center"
+        },
+        {
+          "value": "right",
+          "label": "t:options.alignment.right"
+        }
+      ],
+      "default": "center"
     }
   ],
   "blocks": [

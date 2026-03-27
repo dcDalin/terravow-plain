@@ -9,12 +9,19 @@
   assign question = block.settings.question | default: ''
   assign answer = block.settings.answer | default: ''
   assign unique_id = 'faq-' | append: block.id
+  assign show_border = block.settings.show_border | default: true
+  assign border_width = block.settings.border_width | default: 1
+  assign item_padding = block.settings.item_padding | default: 24
 -%}
 
 {%- if question != blank and answer != blank -%}
   <div
-    class="faq-item"
+    class="faq-item{% unless show_border %} faq-item--no-border{% endunless %}"
     data-faq-item
+    style="
+      --border-width: {{ border_width }}px;
+      --item-padding: {{ item_padding }}px;
+    "
     {{ block.shopify_attributes }}
   >
     <button
@@ -45,10 +52,14 @@
 
 {% stylesheet %}
   .faq-item {
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: var(--border-width, 1px) solid #e5e7eb;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .faq-item--no-border {
+    border-bottom: none;
   }
 
   .faq-item:nth-child(1) { animation-delay: 0.1s; }
@@ -69,17 +80,13 @@
     }
   }
 
-  .faq-item:last-child {
-    border-bottom: none;
-  }
-
   .faq-item__question {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    padding: 1.5rem 0;
+    padding: var(--item-padding, 24px) 0;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -168,7 +175,7 @@
 
   .faq-item__answer {
     min-height: 0;
-    padding: 0 0 1.5rem 0;
+    padding: 0 0 var(--item-padding, 24px) 0;
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
@@ -215,7 +222,6 @@
 
   @media (max-width: 768px) {
     .faq-item__question {
-      padding: 1.25rem 0;
       gap: 1rem;
     }
 
@@ -229,7 +235,6 @@
     }
 
     .faq-item__answer {
-      padding: 0 0 1.25rem 0;
       font-size: 0.875rem;
     }
   }
@@ -331,6 +336,10 @@
   "name": "t:general.faq_item",
   "settings": [
     {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
       "type": "inline_richtext",
       "id": "question",
       "label": "t:labels.question",
@@ -341,6 +350,36 @@
       "id": "answer",
       "label": "t:labels.answer",
       "default": "<p>We offer a 30-day return policy on all products. Items must be unused and in original packaging.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:general.style"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "t:labels.show_border",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "t:labels.border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "label": "t:labels.item_padding",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
     }
   ],
   "presets": [
