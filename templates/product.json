@@ -123,11 +123,22 @@
         "heading": "Frequently Asked Questions",
         "heading_alignment": "center"
       }
+    },
+    "product_how_it_works_cCXyNK": {
+      "type": "product-how-it-works",
+      "name": "t:general.product_how_it_works",
+      "settings": {
+        "heading": "How it works",
+        "autoplay": true,
+        "autoplay_speed": 3,
+        "show_arrows": true
+      }
     }
   },
   "order": [
     "main",
     "how_it_works_HaVXU9",
-    "faq_RCWicB"
+    "faq_RCWicB",
+    "product_how_it_works_cCXyNK"
   ]
 }
