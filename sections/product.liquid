@@ -23,27 +23,43 @@
                 {%- endif -%}
               </div>
             {%- endfor -%}
+            {%- if product.media.size > 1 -%}
+              <button class="product-page__gallery-prev" aria-label="Previous image">
+                <i data-lucide="chevron-left"></i>
+              </button>
+              <button class="product-page__gallery-next" aria-label="Next image">
+                <i data-lucide="chevron-right"></i>
+              </button>
+            {%- endif -%}
           </div>
 
           {%- if product.media.size > 1 -%}
-            <div class="product-page__thumbnails">
-              {%- for media in product.media -%}
-                <button
-                  class="product-page__thumbnail {% if forloop.first %}active{% endif %}"
-                  data-thumbnail-index="{{ forloop.index0 }}"
-                  aria-label="View image {{ forloop.index }}"
-                >
-                  {%- if media.media_type == 'image' -%}
-                    {%- render 'image',
-                      class: 'product-page__thumbnail-image',
-                      image: media.preview_image,
-                      width: 100,
-                      height: 100,
-                      crop: 'center'
-                    -%}
-                  {%- endif -%}
-                </button>
-              {%- endfor -%}
+            <div class="product-page__thumbnails-wrapper">
+              <button class="product-page__thumbs-prev" aria-label="Scroll thumbnails left">
+                <i data-lucide="chevron-left"></i>
+              </button>
+              <div class="product-page__thumbnails">
+                {%- for media in product.media -%}
+                  <button
+                    class="product-page__thumbnail {% if forloop.first %}active{% endif %}"
+                    data-thumbnail-index="{{ forloop.index0 }}"
+                    aria-label="View image {{ forloop.index }}"
+                  >
+                    {%- if media.media_type == 'image' -%}
+                      {%- render 'image',
+                        class: 'product-page__thumbnail-image',
+                        image: media.preview_image,
+                        width: 100,
+                        height: 100,
+                        crop: 'center'
+                      -%}
+                    {%- endif -%}
+                  </button>
+                {%- endfor -%}
+              </div>
+              <button class="product-page__thumbs-next" aria-label="Scroll thumbnails right">
+                <i data-lucide="chevron-right"></i>
+              </button>
             </div>
           {%- endif -%}
         {%- else -%}
@@ -408,35 +424,135 @@
     }
   }
 
-  .product-page__thumbnails {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  /* Gallery chevrons */
+  .product-page__gallery-prev,
+  .product-page__gallery-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .product-page__gallery-prev {
+    left: 12px;
+  }
+
+  .product-page__gallery-next {
+    right: 12px;
+  }
+
+  .product-page__gallery-prev i,
+  .product-page__gallery-next i {
+    width: 20px;
+    height: 20px;
+    color: #000;
+  }
+
+  .product-page__gallery-prev:hover,
+  .product-page__gallery-next:hover {
+    background: rgba(255, 255, 255, 1);
+  }
+
+  /* Thumbnail strip wrapper */
+  .product-page__thumbnails-wrapper {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
     margin-top: 0.75rem;
     width: 100%;
-    max-width: 100%;
   }
 
   @media (min-width: 768px) {
-    .product-page__thumbnails {
-      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-      gap: 0.625rem;
+    .product-page__thumbnails-wrapper {
       margin-top: 0.875rem;
     }
   }
 
   @media (min-width: 1024px) {
-    .product-page__thumbnails {
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 0.75rem;
+    .product-page__thumbnails-wrapper {
       margin-top: 1rem;
     }
   }
 
+  /* Thumbnail chevrons — desktop only */
+  .product-page__thumbs-prev,
+  .product-page__thumbs-next {
+    display: none;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .product-page__thumbs-prev i,
+  .product-page__thumbs-next i {
+    width: 16px;
+    height: 16px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .product-page__thumbs-prev:hover,
+  .product-page__thumbs-next:hover {
+    border-color: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  @media (min-width: 1024px) {
+    .product-page__thumbs-prev,
+    .product-page__thumbs-next {
+      display: flex;
+    }
+  }
+
+  /* Thumbnail strip — single scrollable row */
+  .product-page__thumbnails {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    overflow-x: auto;
+    flex: 1;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+  }
+
+  .product-page__thumbnails::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .product-page__thumbnails {
+      gap: 0.625rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-page__thumbnails {
+      gap: 0.75rem;
+    }
+  }
+
   .product-page__thumbnail {
-    width: 100%;
-    max-width: 100%;
-    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
     border-radius: 0.5rem;
     overflow: hidden;
     border: 2px solid transparent;
@@ -444,6 +560,20 @@
     transition: all 0.3s ease;
     background: none;
     padding: 0;
+  }
+
+  @media (min-width: 768px) {
+    .product-page__thumbnail {
+      width: 70px;
+      height: 70px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-page__thumbnail {
+      width: 80px;
+      height: 80px;
+    }
   }
 
   .product-page__thumbnail:hover {
@@ -1018,6 +1148,11 @@
       this.thumbnails = document.querySelectorAll('[data-thumbnail-index]');
       this.mediaItems = document.querySelectorAll('[data-media-index]');
       this.mediaGallery = document.querySelector('.product-page__media-gallery');
+      this.thumbnailsContainer = document.querySelector('.product-page__thumbnails');
+      this.galleryPrev = document.querySelector('.product-page__gallery-prev');
+      this.galleryNext = document.querySelector('.product-page__gallery-next');
+      this.thumbsPrev = document.querySelector('.product-page__thumbs-prev');
+      this.thumbsNext = document.querySelector('.product-page__thumbs-next');
       this.quantityInput = document.querySelector('.product-form__quantity-input');
       this.decreaseBtn = document.querySelector('[data-quantity-decrease]');
       this.increaseBtn = document.querySelector('[data-quantity-increase]');
@@ -1036,6 +1171,34 @@
           this.showMedia(index);
         });
       });
+
+      // Gallery chevron navigation (wraps around)
+      if (this.galleryPrev) {
+        this.galleryPrev.addEventListener('click', () => {
+          const newIndex = (this.currentIndex - 1 + this.mediaItems.length) % this.mediaItems.length;
+          this.showMedia(newIndex);
+        });
+      }
+
+      if (this.galleryNext) {
+        this.galleryNext.addEventListener('click', () => {
+          const newIndex = (this.currentIndex + 1) % this.mediaItems.length;
+          this.showMedia(newIndex);
+        });
+      }
+
+      // Thumbnail strip scroll (desktop chevrons)
+      if (this.thumbsPrev && this.thumbnailsContainer) {
+        this.thumbsPrev.addEventListener('click', () => {
+          this.thumbnailsContainer.scrollBy({ left: -90, behavior: 'smooth' });
+        });
+      }
+
+      if (this.thumbsNext && this.thumbnailsContainer) {
+        this.thumbsNext.addEventListener('click', () => {
+          this.thumbnailsContainer.scrollBy({ left: 90, behavior: 'smooth' });
+        });
+      }
 
       // Touch swipe for mobile image gallery
       if (this.mediaGallery && this.mediaItems.length > 1) {
@@ -1119,13 +1282,20 @@
         }
       });
 
-      // Scroll thumbnail into view on mobile
-      if (this.thumbnails[index] && window.innerWidth <= 767) {
-        this.thumbnails[index].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
-        });
+      // Scroll active thumbnail into view within the strip
+      if (this.thumbnails[index] && this.thumbnailsContainer) {
+        const thumb = this.thumbnails[index];
+        const container = this.thumbnailsContainer;
+        const thumbLeft = thumb.offsetLeft;
+        const thumbRight = thumbLeft + thumb.offsetWidth;
+        const containerLeft = container.scrollLeft;
+        const containerRight = containerLeft + container.offsetWidth;
+
+        if (thumbLeft < containerLeft) {
+          container.scrollTo({ left: thumbLeft, behavior: 'smooth' });
+        } else if (thumbRight > containerRight) {
+          container.scrollTo({ left: thumbRight - container.offsetWidth, behavior: 'smooth' });
+        }
       }
     }
   }
