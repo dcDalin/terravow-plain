@@ -1,0 +1,397 @@
+{%- liquid
+  assign hiw_images = product.metafields.custom.how_it_works.value
+  assign items_count = hiw_images.size | default: 0
+  assign heading = section.settings.heading | default: ''
+  assign autoplay = section.settings.autoplay
+  assign autoplay_speed = section.settings.autoplay_speed | default: 3
+  assign show_arrows = section.settings.show_arrows
+-%}
+
+{%- if items_count > 0 -%}
+  <div
+    class="product-hiw"
+    data-autoplay="{{ autoplay }}"
+    data-autoplay-speed="{{ autoplay_speed }}"
+  >
+    <div class="product-hiw__container">
+      {%- if heading != blank -%}
+        <h2 class="product-hiw__heading">{{ heading }}</h2>
+      {%- endif -%}
+
+      <div class="product-hiw__carousel">
+        {%- if show_arrows and items_count > 1 -%}
+          <button class="product-hiw__nav product-hiw__nav--prev" type="button" aria-label="Previous image">
+            <i data-lucide="chevron-left"></i>
+          </button>
+        {%- endif -%}
+
+        <div class="product-hiw__track-wrapper">
+          {%- for image in hiw_images -%}
+            <div
+              class="product-hiw__slide{% if forloop.first %} active{% endif %}"
+              data-slide-index="{{ forloop.index0 }}"
+            >
+              {{
+                image
+                | image_url: width: 1200
+                | image_tag:
+                  alt: product.title,
+                  loading: 'lazy',
+                  class: 'product-hiw__image'
+              }}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if show_arrows and items_count > 1 -%}
+          <button class="product-hiw__nav product-hiw__nav--next" type="button" aria-label="Next image">
+            <i data-lucide="chevron-right"></i>
+          </button>
+        {%- endif -%}
+      </div>
+
+      {%- if items_count > 1 -%}
+        <div class="product-hiw__dots">
+          {%- for image in hiw_images -%}
+            <button
+              class="product-hiw__dot{% if forloop.first %} active{% endif %}"
+              data-dot-index="{{ forloop.index0 }}"
+              aria-label="Go to image {{ forloop.index }}"
+              type="button"
+            ></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-hiw,
+  .product-hiw *,
+  .product-hiw *::before,
+  .product-hiw *::after {
+    box-sizing: border-box;
+  }
+
+  .product-hiw {
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .product-hiw__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .product-hiw__container {
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-hiw__container {
+      padding: 0 2rem;
+    }
+  }
+
+  .product-hiw__heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1.25rem;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .product-hiw__heading {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-hiw__heading {
+      font-size: 2rem;
+    }
+  }
+
+  .product-hiw__carousel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .product-hiw__carousel {
+      gap: 1rem;
+    }
+  }
+
+  /* Nav buttons */
+  .product-hiw__nav {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .product-hiw__nav i {
+    width: 18px;
+    height: 18px;
+  }
+
+  .product-hiw__nav:hover {
+    border-color: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.04);
+    color: #000;
+  }
+
+  @media (min-width: 768px) {
+    .product-hiw__nav {
+      width: 44px;
+      height: 44px;
+    }
+
+    .product-hiw__nav i {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  /* Image track */
+  .product-hiw__track-wrapper {
+    flex: 1;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: #f5f5f5;
+  }
+
+  @media (min-width: 768px) {
+    .product-hiw__track-wrapper {
+      border-radius: 1rem;
+    }
+  }
+
+  .product-hiw__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .product-hiw__slide.active {
+    opacity: 1;
+  }
+
+  .product-hiw__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Dots */
+  .product-hiw__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .product-hiw__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+  }
+
+  .product-hiw__dot.active {
+    background: var(--color-foreground, #000);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  .product-hiw__dot:hover:not(.active) {
+    background: rgba(0, 0, 0, 0.4);
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class ProductHowItWorks {
+    constructor(container) {
+      this.container = container;
+      this.slides = Array.from(container.querySelectorAll('[data-slide-index]'));
+      this.dots = Array.from(container.querySelectorAll('[data-dot-index]'));
+      this.prevBtn = container.querySelector('.product-hiw__nav--prev');
+      this.nextBtn = container.querySelector('.product-hiw__nav--next');
+      this.trackWrapper = container.querySelector('.product-hiw__track-wrapper');
+      this.currentIndex = 0;
+      this.autoplay = container.dataset.autoplay === 'true';
+      this.autoplaySpeed = parseInt(container.dataset.autoplaySpeed) * 1000;
+      this.autoplayInterval = null;
+      this.touchStartX = 0;
+      this.touchEndX = 0;
+
+      if (this.slides.length > 1) {
+        this.init();
+      }
+    }
+
+    init() {
+      if (this.prevBtn) {
+        this.prevBtn.addEventListener('click', () => {
+          this.goTo((this.currentIndex - 1 + this.slides.length) % this.slides.length);
+          this.resetAutoplay();
+        });
+      }
+
+      if (this.nextBtn) {
+        this.nextBtn.addEventListener('click', () => {
+          this.goTo((this.currentIndex + 1) % this.slides.length);
+          this.resetAutoplay();
+        });
+      }
+
+      this.dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          this.goTo(parseInt(e.currentTarget.dataset.dotIndex));
+          this.resetAutoplay();
+        });
+      });
+
+      if (this.trackWrapper) {
+        this.trackWrapper.addEventListener('touchstart', (e) => {
+          this.touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        this.trackWrapper.addEventListener('touchend', (e) => {
+          this.touchEndX = e.changedTouches[0].screenX;
+          const diff = this.touchStartX - this.touchEndX;
+          if (Math.abs(diff) > 50) {
+            this.goTo(diff > 0
+              ? (this.currentIndex + 1) % this.slides.length
+              : (this.currentIndex - 1 + this.slides.length) % this.slides.length
+            );
+            this.resetAutoplay();
+          }
+        }, { passive: true });
+      }
+
+      this.container.addEventListener('mouseenter', () => this.pauseAutoplay());
+      this.container.addEventListener('mouseleave', () => this.startAutoplay());
+
+      if (this.autoplay) {
+        this.startAutoplay();
+      }
+    }
+
+    goTo(index) {
+      this.slides[this.currentIndex].classList.remove('active');
+      if (this.dots[this.currentIndex]) this.dots[this.currentIndex].classList.remove('active');
+      this.currentIndex = index;
+      this.slides[this.currentIndex].classList.add('active');
+      if (this.dots[this.currentIndex]) this.dots[this.currentIndex].classList.add('active');
+    }
+
+    startAutoplay() {
+      if (!this.autoplay || this.autoplayInterval) return;
+      this.autoplayInterval = setInterval(() => {
+        this.goTo((this.currentIndex + 1) % this.slides.length);
+      }, this.autoplaySpeed);
+    }
+
+    pauseAutoplay() {
+      if (this.autoplayInterval) {
+        clearInterval(this.autoplayInterval);
+        this.autoplayInterval = null;
+      }
+    }
+
+    resetAutoplay() {
+      this.pauseAutoplay();
+      this.startAutoplay();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.product-hiw').forEach(el => new ProductHowItWorks(el));
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  });
+
+  if (Shopify && Shopify.designMode) {
+    document.addEventListener('shopify:section:load', (event) => {
+      const el = event.target.querySelector('.product-hiw');
+      if (el) {
+        new ProductHowItWorks(el);
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+    });
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:general.product_how_it_works",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "How it works"
+    },
+    {
+      "type": "header",
+      "content": "t:general.carousel_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:labels.autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "t:labels.autoplay_speed",
+      "info": "t:labels.autoplay_speed_info",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "unit": "s",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "t:labels.show_arrows",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.product_how_it_works",
+      "category": "t:general.product"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
