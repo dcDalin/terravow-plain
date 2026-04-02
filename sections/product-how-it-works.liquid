@@ -2,6 +2,7 @@
   assign hiw_images = product.metafields.custom.how_it_works.value
   assign items_count = hiw_images.size | default: 0
   assign heading = section.settings.heading | default: ''
+  assign title_alignment = section.settings.title_alignment | default: 'left'
   assign autoplay = section.settings.autoplay
   assign autoplay_speed = section.settings.autoplay_speed | default: 3
   assign show_arrows = section.settings.show_arrows
@@ -15,32 +16,35 @@
   >
     <div class="product-hiw__container">
       {%- if heading != blank -%}
-        <h2 class="product-hiw__heading">{{ heading }}</h2>
+        <div class="product-hiw__header" style="--title-alignment: {{ title_alignment }}">
+          <h2 class="product-hiw__heading">{{ heading }}</h2>
+        </div>
       {%- endif -%}
 
-      <div class="product-hiw__carousel">
+      <div class="product-hiw__carousel-wrapper">
         {%- if show_arrows and items_count > 1 -%}
           <button class="product-hiw__nav product-hiw__nav--prev" type="button" aria-label="Previous image">
             <i data-lucide="chevron-left"></i>
           </button>
         {%- endif -%}
 
-        <div class="product-hiw__track-wrapper">
-          {%- for image in hiw_images -%}
-            <div
-              class="product-hiw__slide{% if forloop.first %} active{% endif %}"
-              data-slide-index="{{ forloop.index0 }}"
-            >
-              {{
-                image
-                | image_url: width: 1200
-                | image_tag:
-                  alt: product.title,
-                  loading: 'lazy',
-                  class: 'product-hiw__image'
-              }}
-            </div>
-          {%- endfor -%}
+        <div class="product-hiw__carousel-container">
+          <div class="product-hiw__carousel-track">
+            {%- for image in hiw_images -%}
+              <div class="product-hiw__slide" data-slide-index="{{ forloop.index0 }}">
+                <div class="product-hiw__image-wrapper">
+                  {{
+                    image
+                    | image_url: width: 800
+                    | image_tag:
+                      alt: product.title,
+                      loading: 'lazy',
+                      class: 'product-hiw__image'
+                  }}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
         </div>
 
         {%- if show_arrows and items_count > 1 -%}
@@ -77,6 +81,7 @@
   .product-hiw {
     width: 100%;
     padding: 2rem 0;
+    overflow-x: hidden;
   }
 
   .product-hiw__container {
@@ -98,17 +103,28 @@
     }
   }
 
+  /* Heading */
+  .product-hiw__header {
+    text-align: var(--title-alignment, left);
+    margin-bottom: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .product-hiw__header {
+      margin-bottom: 1.5rem;
+    }
+  }
+
   .product-hiw__heading {
     font-size: 1.5rem;
     font-weight: 700;
-    margin: 0 0 1.25rem;
+    margin: 0;
     line-height: 1.2;
   }
 
   @media (min-width: 768px) {
     .product-hiw__heading {
       font-size: 1.75rem;
-      margin-bottom: 1.5rem;
     }
   }
 
@@ -118,89 +134,143 @@
     }
   }
 
-  .product-hiw__carousel {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  @media (min-width: 768px) {
-    .product-hiw__carousel {
-      gap: 1rem;
-    }
-  }
-
-  /* Nav buttons */
-  .product-hiw__nav {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: rgba(0, 0, 0, 0.6);
-  }
-
-  .product-hiw__nav i {
-    width: 18px;
-    height: 18px;
-  }
-
-  .product-hiw__nav:hover {
-    border-color: rgba(0, 0, 0, 0.4);
-    background: rgba(0, 0, 0, 0.04);
-    color: #000;
-  }
-
-  @media (min-width: 768px) {
-    .product-hiw__nav {
-      width: 44px;
-      height: 44px;
-    }
-
-    .product-hiw__nav i {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  /* Image track */
-  .product-hiw__track-wrapper {
-    flex: 1;
+  /* Carousel wrapper — reserves space for nav arrows */
+  .product-hiw__carousel-wrapper {
     position: relative;
-    aspect-ratio: 16 / 9;
+    margin: 0 52px;
+    width: calc(100% - 104px);
+  }
+
+  @media (max-width: 767px) {
+    .product-hiw__carousel-wrapper {
+      margin: 0 40px;
+      width: calc(100% - 80px);
+    }
+  }
+
+  .product-hiw__carousel-container {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .product-hiw__carousel-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .product-hiw__carousel-track.no-transition {
+    transition: none;
+  }
+
+  /* 3 per view on desktop */
+  .product-hiw__slide {
+    flex: 0 0 calc((100% - 48px) / 3);
+    min-width: 0;
+  }
+
+  /* 2 per view on tablet */
+  @media (max-width: 1024px) {
+    .product-hiw__carousel-track {
+      gap: 16px;
+    }
+
+    .product-hiw__slide {
+      flex: 0 0 calc((100% - 16px) / 2);
+    }
+  }
+
+  /* 1 per view on mobile */
+  @media (max-width: 767px) {
+    .product-hiw__carousel-track {
+      gap: 0;
+    }
+
+    .product-hiw__slide {
+      flex: 0 0 100%;
+    }
+  }
+
+  /* Image */
+  .product-hiw__image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
     overflow: hidden;
     border-radius: 0.75rem;
     background: #f5f5f5;
   }
 
   @media (min-width: 768px) {
-    .product-hiw__track-wrapper {
+    .product-hiw__image-wrapper {
       border-radius: 1rem;
     }
   }
 
-  .product-hiw__slide {
+  .product-hiw__image {
     position: absolute;
     inset: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-
-  .product-hiw__slide.active {
-    opacity: 1;
-  }
-
-  .product-hiw__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  /* Nav arrows */
+  .product-hiw__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s ease;
+  }
+
+  .product-hiw__nav i {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.2s ease;
+  }
+
+  .product-hiw__nav:hover i {
+    transform: scale(1.2);
+  }
+
+  .product-hiw__nav--prev {
+    left: -52px;
+  }
+
+  .product-hiw__nav--next {
+    right: -52px;
+  }
+
+  @media (max-width: 767px) {
+    .product-hiw__nav {
+      width: 36px;
+      height: 36px;
+    }
+
+    .product-hiw__nav i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .product-hiw__nav--prev {
+      left: -40px;
+    }
+
+    .product-hiw__nav--next {
+      right: -40px;
+    }
   }
 
   /* Dots */
@@ -237,96 +307,233 @@
   class ProductHowItWorks {
     constructor(container) {
       this.container = container;
+      this.track = container.querySelector('.product-hiw__carousel-track');
       this.slides = Array.from(container.querySelectorAll('[data-slide-index]'));
       this.dots = Array.from(container.querySelectorAll('[data-dot-index]'));
       this.prevBtn = container.querySelector('.product-hiw__nav--prev');
       this.nextBtn = container.querySelector('.product-hiw__nav--next');
-      this.trackWrapper = container.querySelector('.product-hiw__track-wrapper');
-      this.currentIndex = 0;
+
       this.autoplay = container.dataset.autoplay === 'true';
       this.autoplaySpeed = parseInt(container.dataset.autoplaySpeed) * 1000;
+
+      this.currentIndex = 0;
+      this.isTransitioning = false;
+      this.isPaused = false;
       this.autoplayInterval = null;
+      this.resumeTimeout = null;
       this.touchStartX = 0;
       this.touchEndX = 0;
 
-      if (this.slides.length > 1) {
+      this.slidesPerView = this.getSlidesPerView();
+
+      if (this.slides.length > this.slidesPerView) {
         this.init();
       }
     }
 
+    getSlidesPerView() {
+      if (window.innerWidth <= 767) return 1;
+      if (window.innerWidth <= 1024) return 2;
+      return 3;
+    }
+
     init() {
-      if (this.prevBtn) {
-        this.prevBtn.addEventListener('click', () => {
-          this.goTo((this.currentIndex - 1 + this.slides.length) % this.slides.length);
-          this.resetAutoplay();
-        });
-      }
-
-      if (this.nextBtn) {
-        this.nextBtn.addEventListener('click', () => {
-          this.goTo((this.currentIndex + 1) % this.slides.length);
-          this.resetAutoplay();
-        });
-      }
-
-      this.dots.forEach(dot => {
-        dot.addEventListener('click', (e) => {
-          this.goTo(parseInt(e.currentTarget.dataset.dotIndex));
-          this.resetAutoplay();
-        });
-      });
-
-      if (this.trackWrapper) {
-        this.trackWrapper.addEventListener('touchstart', (e) => {
-          this.touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        this.trackWrapper.addEventListener('touchend', (e) => {
-          this.touchEndX = e.changedTouches[0].screenX;
-          const diff = this.touchStartX - this.touchEndX;
-          if (Math.abs(diff) > 50) {
-            this.goTo(diff > 0
-              ? (this.currentIndex + 1) % this.slides.length
-              : (this.currentIndex - 1 + this.slides.length) % this.slides.length
-            );
-            this.resetAutoplay();
-          }
-        }, { passive: true });
-      }
-
-      this.container.addEventListener('mouseenter', () => this.pauseAutoplay());
-      this.container.addEventListener('mouseleave', () => this.startAutoplay());
+      this.cloneSlides();
+      this.setupEventListeners();
+      this.goToSlide(this.slidesPerView, false);
+      this.updateDots();
 
       if (this.autoplay) {
         this.startAutoplay();
       }
     }
 
-    goTo(index) {
-      this.slides[this.currentIndex].classList.remove('active');
-      if (this.dots[this.currentIndex]) this.dots[this.currentIndex].classList.remove('active');
+    cloneSlides() {
+      const clonesBefore = this.slides.slice(-this.slidesPerView).map(slide => {
+        const clone = slide.cloneNode(true);
+        clone.classList.add('clone');
+        return clone;
+      });
+
+      const clonesAfter = this.slides.slice(0, this.slidesPerView).map(slide => {
+        const clone = slide.cloneNode(true);
+        clone.classList.add('clone');
+        return clone;
+      });
+
+      clonesBefore.forEach(clone => this.track.insertBefore(clone, this.track.firstChild));
+      clonesAfter.forEach(clone => this.track.appendChild(clone));
+
+      this.allSlides = Array.from(this.track.children);
+    }
+
+    setupEventListeners() {
+      if (this.prevBtn) {
+        this.prevBtn.addEventListener('click', () => {
+          this.prev();
+          this.pauseAutoplayTemporarily();
+        });
+      }
+
+      if (this.nextBtn) {
+        this.nextBtn.addEventListener('click', () => {
+          this.next();
+          this.pauseAutoplayTemporarily();
+        });
+      }
+
+      this.dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          this.goToSlide(i + this.slidesPerView);
+          this.updateDots();
+          this.pauseAutoplayTemporarily();
+        });
+      });
+
+      this.track.addEventListener('touchstart', (e) => {
+        this.touchStartX = e.touches[0].clientX;
+        this.pauseAutoplay();
+      }, { passive: true });
+
+      this.track.addEventListener('touchmove', (e) => {
+        this.touchEndX = e.touches[0].clientX;
+      }, { passive: true });
+
+      this.track.addEventListener('touchend', () => {
+        const diff = this.touchStartX - this.touchEndX;
+        if (Math.abs(diff) > 50) {
+          diff > 0 ? this.next() : this.prev();
+          this.pauseAutoplayTemporarily();
+        } else {
+          this.resumeAutoplayDelayed();
+        }
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+      });
+
+      this.container.addEventListener('mouseenter', () => this.pauseAutoplay());
+      this.container.addEventListener('mouseleave', () => this.resumeAutoplayDelayed());
+
+      this.track.addEventListener('transitionend', () => this.handleTransitionEnd());
+
+      window.addEventListener('resize', () => this.handleResize());
+    }
+
+    getRealIndex() {
+      return ((this.currentIndex - this.slidesPerView) % this.slides.length + this.slides.length) % this.slides.length;
+    }
+
+    updateDots() {
+      const realIndex = this.getRealIndex();
+      this.dots.forEach((dot, i) => dot.classList.toggle('active', i === realIndex));
+    }
+
+    goToSlide(index, animate = true) {
+      if (this.isTransitioning && animate) return;
+      this.isTransitioning = true;
       this.currentIndex = index;
-      this.slides[this.currentIndex].classList.add('active');
-      if (this.dots[this.currentIndex]) this.dots[this.currentIndex].classList.add('active');
+
+      if (!animate) {
+        this.track.classList.add('no-transition');
+      }
+
+      this.updatePosition();
+
+      if (!animate) {
+        setTimeout(() => {
+          this.track.classList.remove('no-transition');
+          this.isTransitioning = false;
+        }, 50);
+      }
+    }
+
+    updatePosition() {
+      const slideWidth = this.allSlides[0].offsetWidth;
+      const gap = parseInt(window.getComputedStyle(this.track).gap) || 0;
+      const offset = -(this.currentIndex * (slideWidth + gap));
+      this.track.style.transform = `translateX(${offset}px)`;
+    }
+
+    handleTransitionEnd() {
+      this.isTransitioning = false;
+
+      if (this.currentIndex >= this.slides.length + this.slidesPerView) {
+        this.track.classList.add('no-transition');
+        this.currentIndex = this.slidesPerView;
+        this.updatePosition();
+        setTimeout(() => this.track.classList.remove('no-transition'), 50);
+      } else if (this.currentIndex < this.slidesPerView) {
+        this.track.classList.add('no-transition');
+        this.currentIndex = this.slides.length + this.slidesPerView - 1;
+        this.updatePosition();
+        setTimeout(() => this.track.classList.remove('no-transition'), 50);
+      }
+
+      this.updateDots();
+    }
+
+    next() {
+      if (this.isTransitioning) return;
+      this.goToSlide(this.currentIndex + 1);
+    }
+
+    prev() {
+      if (this.isTransitioning) return;
+      this.goToSlide(this.currentIndex - 1);
     }
 
     startAutoplay() {
       if (!this.autoplay || this.autoplayInterval) return;
       this.autoplayInterval = setInterval(() => {
-        this.goTo((this.currentIndex + 1) % this.slides.length);
+        if (!this.isPaused) this.next();
       }, this.autoplaySpeed);
     }
 
     pauseAutoplay() {
-      if (this.autoplayInterval) {
-        clearInterval(this.autoplayInterval);
-        this.autoplayInterval = null;
+      this.isPaused = true;
+      clearTimeout(this.resumeTimeout);
+      this.resumeTimeout = null;
+    }
+
+    resumeAutoplayDelayed() {
+      clearTimeout(this.resumeTimeout);
+      if (this.autoplay) {
+        this.resumeTimeout = setTimeout(() => {
+          this.isPaused = false;
+        }, 2000);
       }
     }
 
-    resetAutoplay() {
+    pauseAutoplayTemporarily() {
       this.pauseAutoplay();
-      this.startAutoplay();
+      this.resumeAutoplayDelayed();
+    }
+
+    handleResize() {
+      const newSlidesPerView = this.getSlidesPerView();
+      if (newSlidesPerView === this.slidesPerView) return;
+
+      this.slidesPerView = newSlidesPerView;
+      this.pauseAutoplay();
+      clearInterval(this.autoplayInterval);
+      this.autoplayInterval = null;
+
+      this.track.innerHTML = '';
+      this.slides.forEach(slide => {
+        const original = slide.cloneNode(true);
+        original.classList.remove('clone');
+        this.track.appendChild(original);
+      });
+      this.slides = Array.from(this.track.querySelectorAll('[data-slide-index]'));
+      this.currentIndex = 0;
+      this.isTransitioning = false;
+
+      if (this.slides.length > this.slidesPerView) {
+        this.cloneSlides();
+        this.goToSlide(this.slidesPerView, false);
+        this.updateDots();
+        if (this.autoplay) this.startAutoplay();
+      }
     }
   }
 
@@ -355,6 +562,17 @@
       "id": "heading",
       "label": "t:labels.heading",
       "default": "How it works"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "t:labels.title_alignment",
+      "options": [
+        { "value": "left", "label": "t:options.alignment.left" },
+        { "value": "center", "label": "t:options.alignment.center" },
+        { "value": "right", "label": "t:options.alignment.right" }
+      ],
+      "default": "left"
     },
     {
       "type": "header",
