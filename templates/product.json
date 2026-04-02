@@ -108,7 +108,7 @@
             "answer": "<p>We offer a 30-day return policy on all products. Items must be unused and in original packaging.</p>",
             "show_border": true,
             "border_width": 1,
-            "item_padding": 24
+            "item_padding": 12
           },
           "blocks": {}
         }
