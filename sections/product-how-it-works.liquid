@@ -433,7 +433,11 @@
       this.container.addEventListener('mouseenter', () => this.pauseAutoplay());
       this.container.addEventListener('mouseleave', () => this.resumeAutoplayDelayed());
 
-      this.track.addEventListener('transitionend', () => this.handleTransitionEnd());
+      this.track.addEventListener('transitionend', (e) => {
+        if (e.target === this.track && e.propertyName === 'transform') {
+          this.handleTransitionEnd();
+        }
+      });
 
       window.addEventListener('resize', () => this.handleResize());
     }
