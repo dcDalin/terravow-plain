@@ -37,10 +37,19 @@
         "autoplay_speed": 3,
         "show_arrows": true
       }
+    },
+    "product_faq_PxMhC7": {
+      "type": "product-faq",
+      "name": "t:general.product_faq",
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "heading_alignment": "center"
+      }
     }
   },
   "order": [
     "main",
-    "product_how_it_works_cCXyNK"
+    "product_how_it_works_cCXyNK",
+    "product_faq_PxMhC7"
   ]
 }
