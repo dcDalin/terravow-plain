@@ -6,42 +6,41 @@
 -%}
 
 {%- if faqs_count > 0 -%}
-  <div class="faq-section" data-faq-section>
-    <div class="faq-section__container">
+  <div class="product-faq-section" data-product-faq-section>
+    <div class="product-faq-section__container">
       {%- if heading != blank -%}
-        <h2 class="faq-section__heading" style="--heading-align: {{ heading_alignment }}">{{ heading }}</h2>
+        <h2 class="product-faq-section__heading" style="--heading-align: {{ heading_alignment }}">{{ heading }}</h2>
       {%- endif -%}
 
-      <div class="faq-section__items">
+      <div class="product-faq-section__items">
         {%- for faq in faqs -%}
           {%- assign unique_id = 'product-faq-' | append: section.id | append: '-' | append: forloop.index -%}
           {%- if faq.title != blank and faq.description != blank -%}
             <div
-              class="faq-item"
-              data-faq-item
-              style="--border-width: 1px; --item-padding: 24px;"
+              class="product-faq-item"
+              data-product-faq-item
             >
               <button
-                class="faq-item__question"
-                data-faq-button
+                class="product-faq-item__question"
+                data-product-faq-button
                 aria-expanded="false"
                 aria-controls="{{ unique_id }}"
                 type="button"
               >
-                <span class="faq-item__question-text">{{ faq.title }}</span>
-                <span class="faq-item__icon" aria-hidden="true">
+                <span class="product-faq-item__question-text">{{ faq.title }}</span>
+                <span class="product-faq-item__icon" aria-hidden="true">
                   <i data-lucide="chevron-down"></i>
                 </span>
               </button>
 
               <div
-                class="faq-item__answer-wrapper"
+                class="product-faq-item__answer-wrapper"
                 id="{{ unique_id }}"
-                data-faq-content
+                data-product-faq-content
                 aria-hidden="true"
               >
-                <div class="faq-item__answer">
-                  {{ faq.description }}
+                <div class="product-faq-item__answer">
+                  {{ faq.description | metafield_tag }}
                 </div>
               </div>
             </div>
@@ -53,259 +52,227 @@
 {%- endif -%}
 
 {% stylesheet %}
-  .faq-section {
+  .product-faq-section {
     width: 100%;
-    padding: 3rem 0;
+    padding: 2rem 0;
   }
 
-  .faq-section__container {
+  .product-faq-section__container {
     max-width: 900px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
 
-  .faq-section__heading {
+  .product-faq-section__heading {
     font-size: 1.875rem;
     font-weight: 700;
     text-align: var(--heading-align, center);
     color: #111827;
-    margin: 0 0 2.5rem 0;
+    margin: 0 0 1.5rem 0;
     opacity: 0;
     transform: translateY(-20px);
-    animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: productFaqFadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
-  @keyframes fadeInDown {
+  @keyframes productFaqFadeInDown {
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  .faq-section__items {
+  .product-faq-section__items {
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
-  .faq-item {
-    border-bottom: var(--border-width, 1px) solid #e5e7eb;
+  .product-faq-item {
+    border-bottom: 1px solid #e5e7eb;
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: productFaqFadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
-  .faq-item:nth-child(1) { animation-delay: 0.1s; }
-  .faq-item:nth-child(2) { animation-delay: 0.15s; }
-  .faq-item:nth-child(3) { animation-delay: 0.2s; }
-  .faq-item:nth-child(4) { animation-delay: 0.25s; }
-  .faq-item:nth-child(5) { animation-delay: 0.3s; }
-  .faq-item:nth-child(6) { animation-delay: 0.35s; }
-  .faq-item:nth-child(7) { animation-delay: 0.4s; }
-  .faq-item:nth-child(8) { animation-delay: 0.45s; }
-  .faq-item:nth-child(9) { animation-delay: 0.5s; }
-  .faq-item:nth-child(10) { animation-delay: 0.55s; }
+  .product-faq-item:first-child {
+    border-top: 1px solid #e5e7eb;
+  }
 
-  @keyframes fadeInUp {
+  .product-faq-item:nth-child(1) { animation-delay: 0.1s; }
+  .product-faq-item:nth-child(2) { animation-delay: 0.15s; }
+  .product-faq-item:nth-child(3) { animation-delay: 0.2s; }
+  .product-faq-item:nth-child(4) { animation-delay: 0.25s; }
+  .product-faq-item:nth-child(5) { animation-delay: 0.3s; }
+  .product-faq-item:nth-child(6) { animation-delay: 0.35s; }
+  .product-faq-item:nth-child(7) { animation-delay: 0.4s; }
+  .product-faq-item:nth-child(8) { animation-delay: 0.45s; }
+  .product-faq-item:nth-child(9) { animation-delay: 0.5s; }
+  .product-faq-item:nth-child(10) { animation-delay: 0.55s; }
+
+  @keyframes productFaqFadeInUp {
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  .faq-item__question {
+  .product-faq-item__question {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    padding: var(--item-padding, 24px) 0;
+    gap: 1rem;
+    padding: 14px 0;
     background: transparent;
     border: none;
     cursor: pointer;
     text-align: left;
-    transition: all 0.3s ease;
-    position: relative;
   }
 
-  .faq-item__question::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.02), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  .faq-item__question:hover::before {
-    opacity: 1;
-  }
-
-  .faq-item__question:hover {
-    padding-left: 0.75rem;
-  }
-
-  .faq-item__question:focus {
+  .product-faq-item__question:focus {
     outline: none;
   }
 
-  .faq-item__question:focus-visible {
+  .product-faq-item__question:focus-visible {
     outline: 2px solid #3b82f6;
     outline-offset: 2px;
     border-radius: 4px;
   }
 
-  .faq-item__question-text {
+  .product-faq-item__question-text {
     flex: 1;
-    font-size: 1.0625rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #1f2937;
     line-height: 1.5;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
   }
 
-  .faq-item__question:hover .faq-item__question-text {
-    color: #111827;
+  .product-faq-item__question:hover .product-faq-item__question-text {
+    color: #6b7280;
   }
 
-  .faq-item__icon {
+  .product-faq-item__icon {
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #6b7280;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .faq-item__icon i,
-  .faq-item__icon svg {
+  .product-faq-item__icon i,
+  .product-faq-item__icon svg {
     width: 100%;
     height: 100%;
   }
 
-  .faq-item__question:hover .faq-item__icon {
-    color: #374151;
-  }
-
-  .faq-item__question[aria-expanded="true"] .faq-item__icon {
+  .product-faq-item__question[aria-expanded="true"] .product-faq-item__icon {
     transform: rotate(180deg);
-    color: #111827;
   }
 
-  .faq-item__answer-wrapper {
+  .product-faq-item__answer-wrapper {
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
   }
 
-  .faq-item__answer-wrapper[aria-hidden="false"] {
+  .product-faq-item__answer-wrapper[aria-hidden="false"] {
     grid-template-rows: 1fr;
   }
 
-  .faq-item__answer {
+  .product-faq-item__answer {
     min-height: 0;
-    padding: 0 0 var(--item-padding, 24px) 0;
+    padding: 0 0 14px 0;
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
     transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
-    font-size: 0.9375rem;
-    line-height: 1.7;
+    font-size: 0.9rem;
+    line-height: 1.6;
     color: #4b5563;
   }
 
-  .faq-item__answer-wrapper[aria-hidden="false"] .faq-item__answer {
+  .product-faq-item__answer-wrapper[aria-hidden="false"] .product-faq-item__answer {
     opacity: 1;
     transform: translateY(0);
   }
 
-  .faq-item__answer p {
-    margin: 0 0 1rem 0;
+  .product-faq-item__answer p {
+    margin: 0 0 0.75rem 0;
   }
 
-  .faq-item__answer p:last-child {
+  .product-faq-item__answer p:last-child {
     margin-bottom: 0;
   }
 
-  .faq-item__answer ul,
-  .faq-item__answer ol {
-    margin: 0 0 1rem 1.5rem;
+  .product-faq-item__answer ul,
+  .product-faq-item__answer ol {
+    margin: 0 0 0.75rem 1.5rem;
     padding: 0;
   }
 
-  .faq-item__answer li {
-    margin-bottom: 0.5rem;
+  .product-faq-item__answer li {
+    margin-bottom: 0.375rem;
   }
 
-  .faq-item__answer a {
+  .product-faq-item__answer a {
     color: #3b82f6;
     text-decoration: underline;
     transition: color 0.2s ease;
   }
 
-  .faq-item__answer a:hover {
+  .product-faq-item__answer a:hover {
     color: #2563eb;
   }
 
   @media (max-width: 768px) {
-    .faq-section {
-      padding: 2rem 0;
+    .product-faq-section {
+      padding: 1.5rem 0;
     }
 
-    .faq-section__container {
+    .product-faq-section__container {
       padding: 0 1rem;
     }
 
-    .faq-section__heading {
+    .product-faq-section__heading {
       font-size: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
     }
 
-    .faq-item__question {
-      gap: 1rem;
+    .product-faq-item__question-text {
+      font-size: 0.9375rem;
     }
 
-    .faq-item__question-text {
-      font-size: 1rem;
-    }
-
-    .faq-item__icon {
-      width: 20px;
-      height: 20px;
-    }
-
-    .faq-item__answer {
+    .product-faq-item__answer {
       font-size: 0.875rem;
     }
   }
 
   @media (max-width: 480px) {
-    .faq-section__heading {
+    .product-faq-section__heading {
       font-size: 1.375rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .faq-section__heading,
-    .faq-item,
-    .faq-item__icon,
-    .faq-item__answer-wrapper,
-    .faq-item__answer,
-    .faq-item__question::before {
+    .product-faq-section__heading,
+    .product-faq-item,
+    .product-faq-item__icon,
+    .product-faq-item__answer-wrapper,
+    .product-faq-item__answer {
       animation: none !important;
       transition-duration: 0.01ms !important;
     }
 
-    .faq-section__heading,
-    .faq-item {
+    .product-faq-section__heading,
+    .product-faq-item {
       opacity: 1 !important;
       transform: none !important;
     }
 
-    .faq-item__answer-wrapper[aria-hidden="false"] .faq-item__answer {
+    .product-faq-item__answer-wrapper[aria-hidden="false"] .product-faq-item__answer {
       opacity: 1 !important;
       transform: none !important;
     }
@@ -313,11 +280,11 @@
 {% endstylesheet %}
 
 {% javascript %}
-  class FAQAccordion {
+  class ProductFAQAccordion {
     constructor(faqItem) {
       this.item = faqItem;
-      this.button = faqItem.querySelector('[data-faq-button]');
-      this.content = faqItem.querySelector('[data-faq-content]');
+      this.button = faqItem.querySelector('[data-product-faq-button]');
+      this.content = faqItem.querySelector('[data-product-faq-content]');
 
       if (this.button && this.content) {
         this.init();
@@ -333,20 +300,11 @@
           this.toggle();
         }
       });
-
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
     }
 
     toggle() {
       const isExpanded = this.button.getAttribute('aria-expanded') === 'true';
-
-      if (isExpanded) {
-        this.close();
-      } else {
-        this.open();
-      }
+      isExpanded ? this.close() : this.open();
     }
 
     open() {
@@ -360,19 +318,19 @@
     }
   }
 
-  function initFAQAccordions() {
-    const faqItems = document.querySelectorAll('[data-faq-item]');
-    faqItems.forEach(item => new FAQAccordion(item));
+  function initProductFAQAccordions() {
+    document.querySelectorAll('[data-product-faq-item]').forEach(item => new ProductFAQAccordion(item));
+    if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFAQAccordions);
+    document.addEventListener('DOMContentLoaded', initProductFAQAccordions);
   } else {
-    initFAQAccordions();
+    initProductFAQAccordions();
   }
 
   if (typeof Shopify !== 'undefined' && Shopify.designMode) {
-    document.addEventListener('shopify:section:load', initFAQAccordions);
+    document.addEventListener('shopify:section:load', initProductFAQAccordions);
   }
 {% endjavascript %}
 
