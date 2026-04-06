@@ -70,6 +70,11 @@
       "settings": {
         "heading": ""
       }
+    },
+    "product_guarantee_9d3pEw": {
+      "type": "product-guarantee",
+      "name": "t:general.product_guarantee",
+      "settings": {}
     }
   },
   "order": [
@@ -77,6 +82,7 @@
     "product_faq_PxMhC7",
     "product_how_it_works_cCXyNK",
     "text_banner_aEV4kY",
-    "product_feature_MfFmc7"
+    "product_feature_MfFmc7",
+    "product_guarantee_9d3pEw"
   ]
 }
