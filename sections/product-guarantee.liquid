@@ -1,0 +1,100 @@
+{%- liquid
+  assign guarantee = product.metafields.custom.product_guarantee.value
+-%}
+
+{%- if guarantee != blank -%}
+  <div class="product-guarantee">
+    <div class="product-guarantee__container">
+      {%- if guarantee.title != blank -%}
+        <h2 class="product-guarantee__title">{{ guarantee.title }}</h2>
+      {%- endif -%}
+      {%- if guarantee.body != blank -%}
+        <div class="product-guarantee__body">
+          {{ guarantee.body | metafield_tag }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-guarantee {
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .product-guarantee__container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  .product-guarantee__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 1.25rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .product-guarantee__title {
+      font-size: 2.25rem;
+    }
+  }
+
+  .product-guarantee__body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #4b5563;
+  }
+
+  .product-guarantee__body p {
+    margin: 0 0 1rem 0;
+  }
+
+  .product-guarantee__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .product-guarantee__body ul,
+  .product-guarantee__body ol {
+    list-style-position: inside;
+    margin: 0 0 1rem 0;
+    padding: 0;
+  }
+
+  .product-guarantee__body li {
+    margin-bottom: 0.375rem;
+  }
+
+  @media (max-width: 767px) {
+    .product-guarantee {
+      padding: 1.5rem 0;
+    }
+
+    .product-guarantee__container {
+      padding: 0 1rem;
+    }
+
+    .product-guarantee__title {
+      font-size: 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.product_guarantee",
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:general.product_guarantee",
+      "category": "t:general.product"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
