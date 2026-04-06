@@ -27,6 +27,14 @@
       ],
       "settings": {}
     },
+    "product_faq_PxMhC7": {
+      "type": "product-faq",
+      "name": "t:general.product_faq",
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "heading_alignment": "center"
+      }
+    },
     "product_how_it_works_cCXyNK": {
       "type": "product-how-it-works",
       "name": "t:general.product_how_it_works",
@@ -37,19 +45,11 @@
         "autoplay_speed": 3,
         "show_arrows": true
       }
-    },
-    "product_faq_PxMhC7": {
-      "type": "product-faq",
-      "name": "t:general.product_faq",
-      "settings": {
-        "heading": "Frequently Asked Questions",
-        "heading_alignment": "center"
-      }
     }
   },
   "order": [
     "main",
-    "product_how_it_works_cCXyNK",
-    "product_faq_PxMhC7"
+    "product_faq_PxMhC7",
+    "product_how_it_works_cCXyNK"
   ]
 }
