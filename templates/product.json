@@ -46,24 +46,6 @@
         "show_arrows": true
       }
     },
-    "text_banner_aEV4kY": {
-      "type": "text-banner",
-      "name": "t:general.text_banner",
-      "settings": {
-        "heading": "90 days to feel like yourself again — or your money back",
-        "heading_size": "h2",
-        "description": "<p>If you're still seeing 3 AM every night after 30 days... If you're still crashing at 2 PM despite taking it consistently... If those charlie horses keep attacking... We'll refund everything. No returning bottles. No explanation needed. No judgment.</p><p>We know it works because 10,847 women are already sleeping through the night. But if you're not one of them – if your exhaustion is somehow stronger than magnesium – you shouldn't pay for it. Simple as that.</p><p><strong>Love it or don't pay for it.</strong> That's the promise.</p>",
-        "button_text": "",
-        "button_link": "",
-        "text_alignment": "center",
-        "content_alignment": "center",
-        "max_width": 800,
-        "background_color": "#f5f5f5",
-        "text_color": "#000000",
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
     "product_feature_MfFmc7": {
       "type": "product-feature",
       "name": "t:general.product_feature",
@@ -81,7 +63,6 @@
     "main",
     "product_faq_PxMhC7",
     "product_how_it_works_cCXyNK",
-    "text_banner_aEV4kY",
     "product_feature_MfFmc7",
     "product_guarantee_9d3pEw"
   ]
