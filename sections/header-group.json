@@ -25,14 +25,28 @@
           "type": "item",
           "settings": {
             "icon": "★",
-            "text": "Welcome to our store"
+            "text": "SPRING SALE"
           }
         },
         "item_GPJXym": {
           "type": "item",
           "settings": {
             "icon": "🚚",
-            "text": "Free shipping"
+            "text": "FREE SHIPPING"
+          }
+        },
+        "item_8H7BYR": {
+          "type": "item",
+          "settings": {
+            "icon": "★",
+            "text": "6 - 12 DAY WORLD WIDE SHIPPING"
+          }
+        },
+        "item_dFVHhn": {
+          "type": "item",
+          "settings": {
+            "icon": "★",
+            "text": "ON SALE NOW"
           }
         },
         "item_HcBMeR": {
@@ -46,6 +60,8 @@
       "block_order": [
         "item_aBmikX",
         "item_GPJXym",
+        "item_8H7BYR",
+        "item_dFVHhn",
         "item_HcBMeR"
       ],
       "name": "t:general.marquee",
