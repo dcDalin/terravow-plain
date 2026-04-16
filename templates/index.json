@@ -26,7 +26,7 @@
         "title": "Contact us",
         "title_alignment": "left",
         "max_width": 600,
-        "input_corner_radius": 28,
+        "input_corner_radius": 30,
         "spacing_top": 80,
         "spacing_bottom": 80
       }
